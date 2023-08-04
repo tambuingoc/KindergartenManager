@@ -1,8 +1,4 @@
 # KindergartenManager
-Admin manager: 
-- Student
-- Teacher
-- Class
-Teacher:
-- Student adtendence
+Admin manager:Student, Teacher, Class
+Teacher: Student adtendence
   
