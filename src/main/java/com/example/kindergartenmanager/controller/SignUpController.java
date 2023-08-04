@@ -1,6 +1,7 @@
 package com.example.kindergartenmanager.controller;
 
 import com.example.kindergartenmanager.dao.DBUtils;
+import com.example.kindergartenmanager.helper.Helper;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -165,13 +166,8 @@ public class SignUpController implements Initializable {
         }
     }
 
-    public void changeToLogin() {
-        button_log_in.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                DBUtils.changeScence(event, "login.fxml", "Login", null, null);
-            }
-        });
+    public void changeToLogin(ActionEvent event) {
+        Helper.changeScence(event, "login.fxml", "Login", null, null);
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
