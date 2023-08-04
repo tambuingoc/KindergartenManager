@@ -27,13 +27,29 @@
 .minus:hover {
     -fx-background-color: #ddd;
 }
+.save {
+    -fx-background-close: transparent;
+    -fx-cursor: hand;
+}
+
+.save:hover {
+    -fx-background-color: #ddd;
+}
+.export {
+    -fx-background-close: transparent;
+    -fx-cursor: hand;
+}
+
+.export:hover {
+    -fx-background-color: #ddd;
+}
 
 .nav-form {
     -fx-background-color: linear-gradient(to bottom right, #2d658c, #2ca772);
 }
 
 .nav-btn {
-    -fx-background-color: linear-gradient(to bottom right, #5b9dc1, #5dc997);
+    -fx-background-color: linear-gradient(to bottom right, #5189ac, #50cc8c);
     -fx-cursor: hand;
     -fx-text-fill: #fff;
     -fx-font-size: 15px;
@@ -42,7 +58,7 @@
 }
 
 .nav-btn:hover {
-    -fx-background-color: linear-gradient(to bottom right, #66acd4, #66cf9f)
+    -fx-background-color: linear-gradient(to bottom right, #86c3e4, #83dfb4);
 }
 
 .logout {
