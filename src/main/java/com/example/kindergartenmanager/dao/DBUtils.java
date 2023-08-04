@@ -1,4 +1,4 @@
-package com.example.kindergartenmanager;
+package com.example.kindergartenmanager.dao;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
