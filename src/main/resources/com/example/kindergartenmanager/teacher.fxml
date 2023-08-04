@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.kindergartenmanager.TeacherController">
+   <children>
+      <AnchorPane layoutY="7.0" prefHeight="600.0" prefWidth="200.0" styleClass="nav-form" stylesheets="@teacherDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Circle fill="#3e4a56" layoutX="100.0" layoutY="82.0" radius="58.0" stroke="BLACK" strokeType="INSIDE" />
+            <Label layoutX="61.0" layoutY="151.0" text="Welcome," textFill="WHITE">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="54.0" layoutY="178.0" text="Ngoc Tam" textFill="WHITE">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Button layoutX="11.0" layoutY="317.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="178.0" styleClass="nav-btn" stylesheets="@teacherDesign.css" text="Class list">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <graphic>
+                  <FontAwesomeIconView fill="WHITE" glyphName="LIST" size="14" />
+               </graphic>
+            </Button>
+            <Button layoutX="11.0" layoutY="361.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="178.0" styleClass="nav-btn" stylesheets="@teacherDesign.css" text="Student Record">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <graphic>
+                  <FontAwesomeIconView fill="WHITE" glyphName="CHECK" size="14" />
+               </graphic>
+            </Button>
+            <Button layoutX="10.0" layoutY="404.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="178.0" styleClass="nav-btn" stylesheets="@teacherDesign.css" text="Analysis Student">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <graphic>
+                  <FontAwesomeIconView fill="WHITE" glyphName="LINE_CHART" size="14" />
+               </graphic>
+            </Button>
+            <Button layoutX="16.0" layoutY="553.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="78.0" styleClass="logout" stylesheets="@teacherDesign.css" text="Logout">
+               <graphic>
+                  <FontAwesomeIconView glyphName="SIGN_OUT" />
+               </graphic>
+            </Button>
+            <Button layoutX="11.0" layoutY="273.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="178.0" styleClass="nav-btn" stylesheets="@teacherDesign.css" text="Home">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <graphic>
+                  <FontAwesomeIconView fill="WHITE" glyphName="HOME" size="14" />
+               </graphic>
+            </Button>
+            <Button layoutX="57.0" layoutY="48.0" mnemonicParsing="false" prefHeight="75.0" prefWidth="91.0" styleClass="edit-btn" stylesheets="@teacherDesign.css">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <FontAwesomeIconView fill="WHITE" glyphName="EDIT" layoutX="96.0" layoutY="113.0" size="16" />
+            <Button layoutX="10.0" layoutY="448.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="178.0" styleClass="nav-btn" stylesheets="@teacherDesign.css" text="Grade">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <graphic>
+                  <FontAwesomeIconView fill="WHITE" glyphName="LINE_CHART" size="14" />
+               </graphic>
+            </Button>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="201.0" prefHeight="35.0" prefWidth="900.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Button layoutX="848.0" layoutY="5.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="50.0" styleClass="close" stylesheets="@teacherDesign.css" AnchorPane.rightAnchor="0.0">
+               <graphic>
+                  <FontAwesomeIconView glyphName="CLOSE" size="14" />
+               </graphic>
+            </Button>
+            <Button layoutX="800.0" layoutY="5.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="50.0" styleClass="minus" stylesheets="@teacherDesign.css">
+               <graphic>
+                  <FontAwesomeIconView glyphName="MINUS" size="14" />
+               </graphic>
+            </Button>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="200.0" layoutY="43.0" prefHeight="135.0" prefWidth="900.0" styleClass="card-top" stylesheets="@teacherDesign.css" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0" />
+   </children>
+</AnchorPane>

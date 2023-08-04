@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.kindergartenmanager.LoginController">
+   <children>
+      <AnchorPane fx:id="login_form" prefHeight="500.0" prefWidth="700.0">
+         <children>
+            <AnchorPane prefHeight="500.0" prefWidth="350.0" styleClass="left-form" stylesheets="@loginDessign.css">
+               <children>
+                  <ImageView fitHeight="242.0" fitWidth="350.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <image>
+                        <Image url="@images/vin.jpg" />
+                     </image>
+                  </ImageView>
+                  <Label layoutX="61.0" layoutY="314.0" text="NƠI CHẮP CÁNH ƯỚC MƠ" textFill="WHITE">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="109.0" layoutY="262.0" text="VINSCHOOL" textFill="WHITE">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <FontAwesomeIconView fill="WHITE" glyphName="GRADUATION_CAP" layoutX="49.0" layoutY="296.0" size="40" />
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="350.0" prefHeight="500.0" prefWidth="350.0">
+               <children>
+                  <FontAwesomeIconView fill="#006666" glyphName="USER" layoutX="177.0" layoutY="101.0" size="50" />
+                  <Label layoutX="98.0" layoutY="117.0" text="Welcome back!" textFill="#006666">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Label>
+                  <PasswordField fx:id="tf_password" layoutX="64.0" layoutY="250.0" onAction="#loginUser" prefHeight="35.0" prefWidth="234.0" promptText="Password" />
+                  <TextField fx:id="tf_username" layoutX="64.0" layoutY="199.0" onAction="#loginUser" prefHeight="35.0" prefWidth="234.0" promptText="Username" />
+                  <Button fx:id="button_login" layoutX="67.0" layoutY="327.0" mnemonicParsing="false" onAction="#loginUser" prefHeight="35.0" prefWidth="234.0" styleClass="login-btn" stylesheets="@loginDessign.css" text="Login">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="button_close" layoutX="293.0" layoutY="1.0" mnemonicParsing="false" onAction="#close" prefHeight="26.0" prefWidth="43.0" styleClass="close" stylesheets="@loginDessign.css" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0">
+                     <graphic>
+                        <FontAwesomeIconView glyphName="CLOSE" size="14" />
+                     </graphic>
+                  </Button>
+                  <Label layoutX="79.0" layoutY="384.0" text="Don't have an account?" />
+                  <Button fx:id="button_sign_up" layoutX="195.0" layoutY="375.0" mnemonicParsing="false" onAction="#changeToSignUp" prefHeight="35.0" prefWidth="66.0" style="-fx-background-color: transparent;" text="Sign Up" textFill="#3366ff" underline="true">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+   </children>
+</StackPane>

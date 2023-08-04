@@ -1,0 +1,23 @@
+.left-form {
+    -fx-background-color: linear-gradient(to bottom right, #2d658c, #2ca772);
+}
+
+.close {
+    -fx-background-close: transparent;
+    -fx-cursor: hand;
+}
+
+.close:hover {
+    -fx-background-color: #fb3d63
+}
+
+.login-btn {
+    -fx-background-color: linear-gradient(to bottom, #2968a7, #14405d);
+    -fx-cursor: hand;
+    -fx-text-fill: #fff;
+}
+
+.login-btn:hover {
+    -fx-background-color: linear-gradient(to bottom, #277bd0, #1b6fa4);
+}
+
