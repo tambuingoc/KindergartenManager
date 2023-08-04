@@ -1,4 +1,4 @@
-package com.example.kindergartenmanager;
+package com.example.kindergartenmanager.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

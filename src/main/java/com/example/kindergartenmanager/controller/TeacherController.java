@@ -1,5 +1,6 @@
-package com.example.kindergartenmanager;
+package com.example.kindergartenmanager.controller;
 
+import com.example.kindergartenmanager.model.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,7 +10,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.w3c.dom.events.MouseEvent;
 
 import java.net.URL;
 import java.util.Optional;

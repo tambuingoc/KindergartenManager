@@ -1,5 +1,7 @@
-package com.example.kindergartenmanager;
+package com.example.kindergartenmanager.controller;
 
+import com.example.kindergartenmanager.dao.DBUtils;
+import com.example.kindergartenmanager.model.User;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -14,7 +16,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.util.ResourceBundle;

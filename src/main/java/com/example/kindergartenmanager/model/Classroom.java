@@ -1,4 +1,4 @@
-package com.example.kindergartenmanager;
+package com.example.kindergartenmanager.model;
 
 public class Classroom {
     private String name;

@@ -1,5 +1,6 @@
-package com.example.kindergartenmanager;
+package com.example.kindergartenmanager.controller;
 
+import com.example.kindergartenmanager.dao.DBUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -18,7 +19,6 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
