@@ -133,6 +133,7 @@
             <DatePicker fx:id="date_attend" layoutX="45.0" layoutY="108.0" prefHeight="30.0" prefWidth="186.0" />
             <Button fx:id="button_export" layoutX="799.0" layoutY="520.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="78.0" styleClass="export" stylesheets="@teacherDesign.css" text="Export" />
             <Button fx:id="button_save" layoutX="710.0" layoutY="520.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="78.0" styleClass="save" stylesheets="@teacherDesign.css" text="Save" />
+            <Button layoutX="623.0" layoutY="520.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="65.0" text="Button" />
          </children>
       </AnchorPane>
       <AnchorPane layoutX="210.0" layoutY="45.0" prefHeight="556.0" prefWidth="900.0" visible="false">
