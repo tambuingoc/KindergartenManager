@@ -1,4 +1,4 @@
-package com.example.kindergartenmanager;
+package com.example.kindergartenmanager.dao;
 
 public class getData {
     public static String username;

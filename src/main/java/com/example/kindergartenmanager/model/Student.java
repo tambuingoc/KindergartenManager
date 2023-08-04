@@ -1,4 +1,4 @@
-package com.example.kindergartenmanager;
+package com.example.kindergartenmanager.model;
 
 import java.sql.Date;
 

@@ -1,6 +1,11 @@
-package com.example.kindergartenmanager;
+package com.example.kindergartenmanager.controller;
 
-import javafx.beans.Observable;
+import com.example.kindergartenmanager.dao.DBUtils;
+import com.example.kindergartenmanager.dao.getData;
+import com.example.kindergartenmanager.model.Classroom;
+import com.example.kindergartenmanager.model.Student;
+import com.example.kindergartenmanager.model.Teacher;
+import com.example.kindergartenmanager.model.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -350,7 +355,7 @@ public class AdminController implements Initializable {
                     || tf_studentParent.getText().isEmpty()
                     || tf_studentPhone.getText().isEmpty()
                     || cb_studentStatus.getSelectionModel().getSelectedItem() == null
-                    ||getData.path ==  null || getData.path =="") {
+                    || getData.path ==  null || getData.path =="") {
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error Message");
                 alert.setHeaderText(null);

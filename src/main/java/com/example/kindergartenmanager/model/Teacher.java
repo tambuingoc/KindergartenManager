@@ -1,7 +1,6 @@
-package com.example.kindergartenmanager;
+package com.example.kindergartenmanager.model;
 
 import java.sql.Date;
-import java.text.DecimalFormat;
 
 public class Teacher {
     private Integer teacherNum;
