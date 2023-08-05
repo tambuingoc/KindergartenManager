@@ -1,5 +1,7 @@
-package com.example.kindergartenmanager;
+package com.example.kindergartenmanager.controller;
 
+import com.example.kindergartenmanager.dao.DBUtils;
+import com.example.kindergartenmanager.helper.Helper;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -18,7 +20,6 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -165,13 +166,8 @@ public class SignUpController implements Initializable {
         }
     }
 
-    public void changeToLogin() {
-        button_log_in.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                DBUtils.changeScence(event, "login.fxml", "Login", null, null);
-            }
-        });
+    public void changeToLogin(ActionEvent event) {
+        Helper.changeScence(event, "login.fxml", "Login", null, null);
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {

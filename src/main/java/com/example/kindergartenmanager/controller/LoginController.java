@@ -1,5 +1,8 @@
-package com.example.kindergartenmanager;
+package com.example.kindergartenmanager.controller;
 
+import com.example.kindergartenmanager.dao.DBUtils;
+import com.example.kindergartenmanager.helper.Helper;
+import com.example.kindergartenmanager.model.User;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -14,7 +17,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.util.ResourceBundle;
@@ -41,7 +43,7 @@ public class LoginController implements Initializable {
         System.exit(0);
     }
     //CREATE DATABASE
-    public void loginUser() throws Exception {
+    public void loginUser(ActionEvent event) throws Exception {
         Connection connect = null;
         PreparedStatement prepare = null;
         ResultSet result = null;
@@ -76,13 +78,7 @@ public class LoginController implements Initializable {
                         //TO HIDE THE LOGIN FORM
                         button_login.getScene().getWindow().hide();
                         //LINK DASHBROAD
-                        Parent root = FXMLLoader.load(getClass().getResource("admin.fxml"));
-
-                        Stage stage = new Stage();
-                        Scene scene = new Scene(root);
-
-                        stage.setScene(scene);
-                        stage.show();
+                        Helper.changeScence(event,"admin.fxml");
 
                     } else {
                         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -120,14 +116,8 @@ public class LoginController implements Initializable {
             }
         }
 
-        public void changeToSignUp() throws Exception {
-            button_sign_up.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    //Nếu ấn nút signup sẽ thay đổi cảnh sang trang đanq ký
-                    DBUtils.changeScence(event, "signup.fxml", "Sign Up", null, null);
-                }
-            });
+        public void changeToSignUp(ActionEvent event) throws Exception {
+            Helper.changeScence(event,"signup.fxml", "Sign Up", null, null);
         }
     @Override
     public void initialize(URL location, ResourceBundle resources) {

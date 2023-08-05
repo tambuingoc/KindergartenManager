@@ -1,9 +1,12 @@
-package com.example.kindergartenmanager;
+package com.example.kindergartenmanager.model;
 
 import java.sql.Date;
 
 //Student database (Model)
 public class Student {
+
+
+
     private Integer studentNum;
     private String yearSt;
     private String classNameSt;
@@ -15,6 +18,9 @@ public class Student {
     private String phoneSt;
     private String statusSt;
     private String imageSt;
+
+    public Student() {
+    }
 
     public Student(Integer studentNum, String yearSt, String classNameSt, String nameSt, String genderSt, String addressSt, Date birthSt, String parentNameSt, String phoneSt, String statusSt, String imageSt) {
         this.studentNum = studentNum;
