@@ -6,6 +6,7 @@ import com.example.kindergartenmanager.model.Teacher;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 public class TeacherDAO extends DAO {
@@ -68,26 +69,26 @@ public class TeacherDAO extends DAO {
     }
 
     public boolean updateTeacher(Teacher teacher) {
-        String uri = getData.path;
-        uri = uri.replace("\\", "\\\\");
+        String sql = "UPDATE Teachers SET name = ?, gender = ?, address = ?, phone = ?, dob = ?, cardID = ?, degree = ?, className = ?, salary = ?, image = ? WHERE teacherNum = ?";
 
-        String sql = "UPDATE Teachers SET "
-                + "name = '" + teacher.getName()
-                + "', gender = '" + teacher.getGender()
-                + "', address = '" + teacher.getAddress()
-                + "', phone = '" + teacher.getPhone()
-                + "', dob = '" + teacher.getDob()
-                + "', cardID = '" + teacher.getCardID()
-                + "', degree = '" + teacher.getDegree()
-                + "', className = '" + teacher.getClassName()
-                + "', salary = '" + teacher.getSalary()
-                + "', image = '" + uri + "' WHERE teacherNum = '"
-                + teacher.getTeacherNum() + "'";
         try {
-            Statement statement = con.createStatement();
-            statement.executeUpdate(sql);
-            return true;
-        } catch (Exception e) {
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+
+            preparedStatement.setString(1, teacher.getName());
+            preparedStatement.setString(2, teacher.getGender());
+            preparedStatement.setString(3, teacher.getAddress());
+            preparedStatement.setString(4, teacher.getPhone());
+            preparedStatement.setString(5, teacher.getDob().toString());
+            preparedStatement.setString(6, teacher.getCardID());
+            preparedStatement.setString(7, teacher.getDegree());
+            preparedStatement.setString(8, teacher.getClassName());
+            preparedStatement.setDouble(9, teacher.getSalary());
+            preparedStatement.setString(10, teacher.getImage()); // Assuming getData.path has the correct URI value.
+            preparedStatement.setInt(11, teacher.getTeacherNum());
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
