@@ -12,7 +12,7 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         String packageName= "/com/example/kindergartenmanager/";
-        String initScence = "login.fxml";
+        String initScence = "admin.fxml";
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource(packageName+initScence));
         Scene scene = new Scene(fxmlLoader.load(), 1100, 600);
         stage.setTitle("Hello!");

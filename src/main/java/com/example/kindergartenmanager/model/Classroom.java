@@ -7,6 +7,7 @@ public class Classroom {
     private String teacherName;
     private String year;
 
+    public Classroom() {}
     public Classroom(String name, Integer quality, String room, String teacherName, String year) {
         this.name = name;
         this.quality = quality;

@@ -14,7 +14,8 @@ public class DAO {
         if(con==null){
             try {
                 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-                String url = "jdbc:sqlserver://127.0.0.1:1433;database=Kindergarten;user=sa;password=123456;trustservercertificate=true;connectTimeout=1;connection_limit=1000";
+//                String url = "jdbc:sqlserver://DESKTOP-9J07U8P\\SQLEXPRESS:1433;"+"user=sa;password=123;databaseName=Kindergarten;encrypt=true;trustservercertificate=true;connectTimeout=1;connection_limit=1000";
+                String url = "jdbc:sqlserver://DESKTOP-9J07U8P\\SQLEXPRESS:1433;"+"user=sa;password=123;databaseName=Kindergarten;encrypt=true;trustServerCertificate=true";
                 con = DriverManager.getConnection(url);
             } catch (Exception e) {
                 e.printStackTrace();

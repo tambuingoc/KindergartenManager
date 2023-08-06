@@ -15,6 +15,8 @@ public class Teacher {
     private Float salary;
     private String image;
 
+    public Teacher() {}
+
     public Teacher(Integer teacherNum, String name, String gender, String address, String phone, Date dob, String cardID, String degree, String className, Float salary, String image) {
         this.teacherNum = teacherNum;
         this.name = name;

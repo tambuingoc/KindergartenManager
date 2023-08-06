@@ -162,6 +162,53 @@ public class TeacherController implements Initializable {
             analysis.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
         }
     }
+    /*
+    public void homeDisplayToTalStudents() {
+        String sql = "SELECT COUNT(student_id) as count FROM Students";
+        connect = DBUtils.connectDb();
+        try {
+         int countStudent = 0;
+         prepare = connect.prepareStatement(sql);
+         result = prepare.executeQuery();
+         if(result.next()) {
+             countStudent = result.getInt("COUNT(student_id)");
+          }
+         home_totalStudent.setText(String.valueOf(countStudent));
+        } catch (Exception e) {
+        e.printStackTrace();
+        }
+    }
+    public void homeDisplayTotalFemales() {
+     String sql = "SELECT COUNT(student_id) FROM Students WHERE genderSt = 'Nữ'";
+     connect = DBUtils.connectDb();
+     try {
+         int countFemaleStudent = 0;
+         prepare = connect.prepareStatement(sql);
+         result = prepare.executeQuery();
+         if(result.next()) {
+             countFemaleStudent = result.getInt("COUNT(student_id)");
+          }
+         home_totalFemaleStudent.setText(String.valueOf(countFemaleStudent));
+        } catch (Exception e) {
+        e.printStackTrace();
+        }
+    }
+    public void homeDisplayTotalMales(){
+     String sql = "SELECT COUNT(student_id) FROM Students WHERE genderSt = 'Nam'";
+     connect = DBUtils.connectDb();
+     try {
+         int countMaleStudent = 0;
+         prepare = connect.prepareStatement(sql);
+         result = prepare.executeQuery();
+         if(result.next()) {
+             countFMaleStudent = result.getInt("COUNT(student_id)");
+          }
+         home_totalFemaleStudent.setText(String.valueOf(countMaleStudent));
+        } catch (Exception e) {
+        e.printStackTrace();
+        }
+    }
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
