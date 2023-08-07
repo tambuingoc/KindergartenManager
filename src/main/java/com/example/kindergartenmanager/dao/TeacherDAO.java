@@ -3,6 +3,8 @@ package com.example.kindergartenmanager.dao;
 import com.example.kindergartenmanager.model.Classroom;
 import com.example.kindergartenmanager.model.Student;
 import com.example.kindergartenmanager.model.Teacher;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -105,6 +107,37 @@ public class TeacherDAO extends DAO {
             e.printStackTrace();
         }
         return false;
+    }
+
+    //Return list of all teacher
+    public ObservableList<Teacher> addTeacherListData() {
+
+        ObservableList<Teacher> listTeachers = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM Teachers";
+
+        try {
+            Teacher teacherD;
+            PreparedStatement prepare = con.prepareStatement(sql);
+            ResultSet result = prepare.executeQuery();
+            while (result.next()) {
+                teacherD = new Teacher(result.getInt("teacherNum"),
+                        result.getString("name"),
+                        result.getString("gender"),
+                        result.getString("address"),
+                        result.getString("phone"),
+                        result.getDate("dob"),
+                        result.getString("cardID"),
+                        result.getString("degree"),
+                        result.getString("className"),
+                        result.getFloat("salary"),
+                        result.getString("image"));
+
+                listTeachers.add(teacherD);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listTeachers;
     }
 }
 

@@ -1,6 +1,8 @@
 package com.example.kindergartenmanager.dao;
 
 import com.example.kindergartenmanager.model.Student;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.sql.*;
 
@@ -25,23 +27,23 @@ public class StudentDAO extends DAO {
         return countStudent;
     }
 
-    public int countTotalFemaleStudents() {
-        String sql = "SELECT COUNT(student_id) as count FROM Students WHERE genderSt = 'Nữ";
-        int countFemaleStudent = 0;
+    public int countTotalStudentsLa2() {
+        String sql = "SELECT COUNT(student_id) as count FROM Students WHERE classNameSt = 'Lá 2'";
+        int countStudent = 0;
         try {
             PreparedStatement ps = con.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             if(rs.next()) {
-                countFemaleStudent = rs.getInt("count");
+                countStudent = rs.getInt("count");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return countFemaleStudent;
+        return countStudent;
     }
 
     public int countTotalMaleStudents() {
-        String sql = "SELECT COUNT(student_id) as count FROM Students WHERE genderSt = 'Nam";
+        String sql = "SELECT COUNT(student_id) as count FROM Students WHERE genderSt = 'Nam' AND classNameSt = 'Lá 2'";
         int countMaleStudnet = 0;
         try {
             PreparedStatement ps = con.prepareStatement(sql);
@@ -131,6 +133,67 @@ public class StudentDAO extends DAO {
             e.printStackTrace();
         }
         return false;
+    }
+    //Return list student of all Classroom
+    public ObservableList<Student> addStudentListData() {
+
+        ObservableList<Student> listStudents = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM Students";
+
+        try {
+            Student studentD;
+            PreparedStatement prepare = con.prepareStatement(sql);
+            ResultSet result = prepare.executeQuery();
+            while (result.next()) {
+                studentD = new Student(result.getInt("studentNum"),
+                        result.getString("yearSt"),
+                        result.getString("classNameSt"),
+                        result.getString("nameSt"),
+                        result.getString("genderSt"),
+                        result.getString("addressSt"),
+                        result.getDate("birthSt"),
+                        result.getString("parentNameSt"),
+                        result.getString("phoneSt"),
+                        result.getString("statusSt"),
+                        result.getString("imageSt"));
+
+                listStudents.add(studentD);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listStudents;
+    }
+
+    //Return list Student of className = Lá 2
+    public ObservableList<Student> addStudentListDataLa2() {
+
+        ObservableList<Student> listStudents = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM Students WHERE classNameSt = 'Lá 2'";
+
+        try {
+            Student studentD;
+            PreparedStatement prepare = con.prepareStatement(sql);
+            ResultSet result = prepare.executeQuery();
+            while (result.next()) {
+                studentD = new Student(result.getInt("studentNum"),
+                        result.getString("yearSt"),
+                        result.getString("classNameSt"),
+                        result.getString("nameSt"),
+                        result.getString("genderSt"),
+                        result.getString("addressSt"),
+                        result.getDate("birthSt"),
+                        result.getString("parentNameSt"),
+                        result.getString("phoneSt"),
+                        result.getString("statusSt"),
+                        result.getString("imageSt"));
+
+                listStudents.add(studentD);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listStudents;
     }
 
 }

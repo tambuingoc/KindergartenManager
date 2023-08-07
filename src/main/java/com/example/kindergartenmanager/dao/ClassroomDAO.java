@@ -1,6 +1,8 @@
 package com.example.kindergartenmanager.dao;
 
 import com.example.kindergartenmanager.model.Classroom;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -85,6 +87,28 @@ public class ClassroomDAO extends DAO{
             e.printStackTrace();
         }
         return false;
+    }
+
+    //Return list of all classroom
+    public ObservableList<Classroom> addClassroomListData() {
+        ObservableList<Classroom> listData = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM Classrooms";
+        try {
+            Classroom classroomD;
+            PreparedStatement prepare = con.prepareStatement(sql);
+            ResultSet result = prepare.executeQuery();
+            while (result.next()) {
+                classroomD = new Classroom(result.getString("name"),
+                        result.getInt("quality"),
+                        result.getString("room"),
+                        result.getString("teacherName"),
+                        result.getString("year"));
+                listData.add(classroomD);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listData;
     }
 }
 

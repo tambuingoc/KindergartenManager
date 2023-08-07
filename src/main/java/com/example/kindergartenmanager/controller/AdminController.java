@@ -642,42 +642,10 @@ public class AdminController implements Initializable {
         ObservableList ObList = FXCollections.observableArrayList(statusL);
         cb_studentStatus.setItems(ObList);
     }
-
-    public ObservableList<Student> addStudentListData() {
-
-        ObservableList<Student> listStudents = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM Students";
-        connect = DBUtils.connectDb();
-
-        try {
-            Student studentD;
-            prepare = connect.prepareStatement(sql);
-            result = prepare.executeQuery();
-            while (result.next()) {
-                studentD = new Student(result.getInt("studentNum"),
-                        result.getString("yearSt"),
-                        result.getString("classNameSt"),
-                        result.getString("nameSt"),
-                        result.getString("genderSt"),
-                        result.getString("addressSt"),
-                        result.getDate("birthSt"),
-                        result.getString("parentNameSt"),
-                        result.getString("phoneSt"),
-                        result.getString("statusSt"),
-                        result.getString("imageSt"));
-
-                listStudents.add(studentD);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return listStudents;
-    }
-
     private ObservableList<Student> addStudentsListD;
 
     public void addStudentShowListData() {
-        addStudentsListD = addStudentListData();
+        addStudentsListD = studentDAO.addStudentListData();
 
         student_col_ID.setCellValueFactory(new PropertyValueFactory<>("studentNum"));
         student_col_year.setCellValueFactory(new PropertyValueFactory<>("yearSt"));
@@ -983,42 +951,10 @@ public class AdminController implements Initializable {
         ObservableList ObList = FXCollections.observableArrayList(degreeL);
         cb_teacherDegree.setItems(ObList);
     }
-
-    public ObservableList<Teacher> addTeacherListData() {
-
-        ObservableList<Teacher> listTeachers = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM Teachers";
-        connect = DBUtils.connectDb();
-
-        try {
-            Teacher teacherD;
-            prepare = connect.prepareStatement(sql);
-            result = prepare.executeQuery();
-            while (result.next()) {
-                teacherD = new Teacher(result.getInt("teacherNum"),
-                        result.getString("name"),
-                        result.getString("gender"),
-                        result.getString("address"),
-                        result.getString("phone"),
-                        result.getDate("dob"),
-                        result.getString("cardID"),
-                        result.getString("degree"),
-                        result.getString("className"),
-                        result.getFloat("salary"),
-                        result.getString("image"));
-
-                listTeachers.add(teacherD);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return listTeachers;
-    }
-
     private ObservableList<Teacher> addTeachersListD;
 
     public void addTeacherShowListData() {
-        addTeachersListD = addTeacherListData();
+        addTeachersListD = teacherDAO.addTeacherListData();
 
         teacher_col_ID.setCellValueFactory(new PropertyValueFactory<>("teacherNum"));
         teacher_col_name.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -1058,32 +994,10 @@ public class AdminController implements Initializable {
     }
 
     //LÀM VIỆC VỚI CLASSROOM FORM
-    public ObservableList<Classroom> addClassroomListData() {
-        ObservableList<Classroom> listData = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM Classrooms";
-        connect = DBUtils.connectDb();
-        try {
-            Classroom classroomD;
-            prepare = connect.prepareStatement(sql);
-            result = prepare.executeQuery();
-            while (result.next()) {
-                classroomD = new Classroom(result.getString("name"),
-                        result.getInt("quality"),
-                        result.getString("room"),
-                        result.getString("teacherName"),
-                        result.getString("year"));
-                listData.add(classroomD);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return listData;
-    }
-
     private ObservableList<Classroom> addClassroomList;
 
     public void addClassroomShowListData() {
-        addClassroomList = addClassroomListData();
+        addClassroomList = classroomDAO.addClassroomListData();
 
         class_col_name.setCellValueFactory(new PropertyValueFactory<>("name"));
         class_col_quality.setCellValueFactory(new PropertyValueFactory<>("quality"));
@@ -1420,11 +1334,5 @@ public class AdminController implements Initializable {
         homeDisplayTotalStudents();
         homeDisplayTotalTeachers();
         homeDisplayTotalClasses();
-        //To show immediately when we process to dashboard application form
-//        addStudentShowListData();
-//        addStudentYearList();
-//        addStudentClassList();
-//        addStudentGenderList();
-//        addStudentStatusList();
     }
 }
