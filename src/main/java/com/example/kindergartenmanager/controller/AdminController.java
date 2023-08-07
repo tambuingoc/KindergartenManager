@@ -281,9 +281,6 @@ public class AdminController implements Initializable {
     private TableView<Teacher> teacher_tableView;
 
     @FXML
-    private TextField tf_classID;
-
-    @FXML
     private TextField tf_className;
 
     @FXML
@@ -461,7 +458,7 @@ public class AdminController implements Initializable {
     public void addStudentUpdate() {
         try {
             Alert alert;
-            if (validateStudent() == false) {
+            if (tf_studentID.getText().isEmpty()) {
                 return;
             } else {
                 alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -497,7 +494,7 @@ public class AdminController implements Initializable {
     public void addStudentDelete() {
         try {
             Alert alert;
-            if (validateStudent() == false) {return;}
+            if (tf_studentID.getText().isEmpty()) {return;}
              else {
                 alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Confirmation Message");
@@ -757,9 +754,13 @@ public class AdminController implements Initializable {
         teacher.setDegree((String) cb_teacherDegree.getSelectionModel().getSelectedItem());
         teacher.setClassName((String) cb_teacherClassID.getSelectionModel().getSelectedItem());
         teacher.setSalary(Float.parseFloat(tf_teacherSalary.getText()));
-        String uri = getData.path;
-        uri = uri.replace("\\", "\\\\");
-        teacher.setImage(uri);
+        try {
+            String uri = getData.path;
+            uri = uri.replace("\\", "\\\\");
+            teacher.setImage(uri);
+        } catch (Exception e) {
+
+        }
         return teacher;
     }
 
@@ -786,7 +787,7 @@ public class AdminController implements Initializable {
                         alert.setContentText("Successfully Added!");
                         alert.showAndWait();
                         //TO UPDATE THE TABLEVIEW
-                        addTeacherListData();
+                        addTeacherShowListData();
                         //TO CLEAR THE FIELDS
                         addStudentClear();
                     }
@@ -817,7 +818,7 @@ public class AdminController implements Initializable {
     public void addTeacherUpdate() {
         try {
             Alert alert;
-            if (validateTeacher() == false) {
+            if (tf_teacherID.getText().isEmpty()) {
                 return;
             } else {
                 alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -851,7 +852,7 @@ public class AdminController implements Initializable {
     public void addTeacherDelete() {
         try {
             Alert alert;
-            if (validateTeacher() == false)
+            if (tf_teacherID.getText().isEmpty())//teacher_id not null
             {
                 return;
             } else {
@@ -1186,7 +1187,7 @@ public class AdminController implements Initializable {
     public void addClassroomUpdate() {
         try {
             Alert alert;
-            if (validateClassroom() == false) {
+            if (tf_className.getText().isEmpty()) {
                 return;
             } else {
                 alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -1222,7 +1223,7 @@ public class AdminController implements Initializable {
 
         try {
             Alert alert;
-            if (validateClassroom()==false) {
+            if (tf_className.getText().isEmpty()) {
                 return;
             } else {
                 alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -1233,7 +1234,7 @@ public class AdminController implements Initializable {
                 if (option.get().equals(ButtonType.OK)) {
                     Classroom creClass = createClassroom();
                     boolean re = classroomDAO.deleteClassroom(creClass);
-                    if(re) {
+                    if(re == true) {
                         alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Information Message");
                         alert.setHeaderText(null);

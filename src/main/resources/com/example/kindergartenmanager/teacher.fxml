@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
@@ -96,12 +97,40 @@
             </Button>
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="363.0" layoutY="216.0" prefHeight="200.0" prefWidth="200.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
+      <AnchorPane layoutX="200.0" layoutY="35.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
          <children>
-            <AnchorPane layoutY="-3.0" prefHeight="92.0" prefWidth="900.0" styleClass="card-top" stylesheets="@teacherDesign.css" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <AnchorPane prefHeight="92.0" prefWidth="900.0" styleClass="card-top" stylesheets="@teacherDesign.css" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Label layoutX="196.0" layoutY="14.0" text="VINSCHOOL" textFill="WHITE">
+                     <font>
+                        <Font name="Century" size="36.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="500.0" layoutY="60.0" text="NƠI CHẮP CÁNH ƯỚC MƠ" textFill="WHITE">
+                     <font>
+                        <Font name="Century" size="18.0" />
+                     </font>
+                  </Label>
+               </children></AnchorPane>
+            <TextField fx:id="tf_search" layoutX="28.0" layoutY="103.0" prefHeight="30.0" prefWidth="170.0" promptText="Search" />
+            <FontAwesomeIconView glyphName="SEARCH" layoutX="175.0" layoutY="123.0" size="16" />
+            <TableView fx:id="table_stView" layoutX="37.0" layoutY="160.0" prefHeight="379.0" prefWidth="830.0">
+              <columns>
+                <TableColumn fx:id="st_col_id" prefWidth="75.0" text="Student #" />
+                <TableColumn fx:id="st_col_year" prefWidth="62.399993896484375" text="Year" />
+                  <TableColumn fx:id="st_col_class" prefWidth="64.80001831054688" text="Class" />
+                  <TableColumn fx:id="st_col_name" prefWidth="109.5999755859375" text="Name" />
+                  <TableColumn fx:id="st_col_gender" prefWidth="62.39996337890625" text="Gender" />
+                  <TableColumn fx:id="st_col_address" prefWidth="97.5999755859375" text="Address" />
+                  <TableColumn fx:id="st_col_dob" prefWidth="89.60003662109375" text="Birth Date" />
+                  <TableColumn fx:id="st_col_paName" prefWidth="103.20001220703125" text="Parent Name" />
+                  <TableColumn fx:id="st_col_phone" prefWidth="93.59991455078125" text="Phone Number" />
+                  <TableColumn fx:id="st_col_status" prefWidth="76.00006103515625" text="Status" />
+              </columns>
+            </TableView>
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="200.0" layoutY="35.0" prefHeight="556.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
+      <AnchorPane layoutX="200.0" layoutY="35.0" prefHeight="556.0" prefWidth="900.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
          <children>
             <AnchorPane prefHeight="92.0" prefWidth="900.0" styleClass="card-top" stylesheets="@teacherDesign.css" AnchorPane.bottomAnchor="473.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>

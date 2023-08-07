@@ -58,18 +58,16 @@ public class ClassroomDAO extends DAO{
     }
 
     public boolean updateClassroom(Classroom classroom) {
-
-        String updateData = "UPDATE Classrooms SET "
-                + "name = '" + classroom.getName()
-                + "', quality = '" + classroom.getQuality()
-                + "', room = '" + classroom.getRoom()
-                + "', teacherName = '" + classroom.getTeacherName()
-                + "', year = '" + classroom.getYear()
-                + "'";
+        String updateData = "UPDATE Classrooms SET quality = ?, room = ?, teacherName = ?, year = ? WHERE name = ?";
         try {
-            Statement statement = con.createStatement();
-            statement.executeUpdate(updateData);
-            return true;
+            PreparedStatement preparedStatement = con.prepareStatement(updateData);
+            preparedStatement.setString(1, classroom.getQuality().toString());
+            preparedStatement.setString(2, classroom.getRoom());
+            preparedStatement.setString(3, classroom.getTeacherName());
+            preparedStatement.setString(4, classroom.getYear());
+            preparedStatement.setString(5, classroom.getName());
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -77,12 +75,12 @@ public class ClassroomDAO extends DAO{
     }
 
     public boolean deleteClassroom(Classroom classroom) {
-        String deleteData = "DELETE FROM Classrooms WHERE name = '"
-                + classroom.getName() + "'";
+        String deleteData = "DELETE FROM Classrooms WHERE name = ?";
         try {
-            Statement statement = con.createStatement();
-            statement.executeUpdate(deleteData);
-            return true;
+            PreparedStatement preparedStatement = con.prepareStatement(deleteData);
+            preparedStatement.setString(1, classroom.getName());
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
         } catch (Exception e) {
             e.printStackTrace();
         }

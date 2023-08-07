@@ -95,12 +95,12 @@ public class TeacherDAO extends DAO {
     }
 
     public boolean deleteTeacher(Teacher teacher) {
-        String sql = "DELETE FROM Teachers WHERE teacherNum = '"
-                + teacher.getTeacherNum() + "'";
+        String sql = "DELETE FROM Teachers WHERE teacherNum = ?";
         try {
-            Statement statement = con.createStatement();
-            statement.executeUpdate(sql);
-            return true;
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setInt(1,teacher.getTeacherNum());
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -2,10 +2,6 @@
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import java.lang.String?>
-<?import javafx.scene.chart.BarChart?>
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.LineChart?>
-<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
@@ -13,6 +9,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -115,7 +112,7 @@
                <right>
                   <AnchorPane prefHeight="554.0" prefWidth="898.0" BorderPane.alignment="CENTER">
                      <children>
-                        <AnchorPane fx:id="home_form" layoutX="218.0" layoutY="85.0" prefHeight="554.4" prefWidth="898.4" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="home_form" layoutX="218.0" layoutY="85.0" prefHeight="554.4" prefWidth="898.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="8.0" layoutY="9.0" prefHeight="537.0" prefWidth="882.0" stylesheets="@adminDesign.css">
                                  <children>
@@ -172,52 +169,43 @@
                                           </AnchorPane>
                                        </children>
                                     </AnchorPane>
-                                    <AnchorPane layoutX="14.0" layoutY="158.0" prefHeight="354.0" prefWidth="434.0" stylesheets="@adminDesign.css">
+                                    <AnchorPane layoutX="37.0" layoutY="207.0" prefHeight="264.0" prefWidth="389.0" stylesheets="@adminDesign.css">
                                        <styleClass>
                                           <String fx:value="white-bg" />
                                           <String fx:value="shadow" />
                                        </styleClass>
                                        <children>
-                                          <BarChart fx:id="home_totalStudentChart" layoutX="-92.0" layoutY="-118.0" prefHeight="354.4" prefWidth="522.4" title="Total Enrolled Chart" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                            <xAxis>
-                                              <CategoryAxis side="BOTTOM" />
-                                            </xAxis>
-                                            <yAxis>
-                                              <NumberAxis side="LEFT" />
-                                            </yAxis>
-                                          </BarChart>
+                                          <ImageView fitHeight="266.0" fitWidth="398.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@images/class_vin.jpg" />
+                                             </image>
+                                          </ImageView>
                                        </children>
                                     </AnchorPane>
-                                    <AnchorPane layoutX="465.0" layoutY="158.0" prefHeight="160.0" prefWidth="402.0" stylesheets="@adminDesign.css">
+                                    <AnchorPane layoutX="549.0" layoutY="160.0" prefHeight="150.0" prefWidth="274.0" stylesheets="@adminDesign.css">
                                        <styleClass>
                                           <String fx:value="white-bg" />
                                           <String fx:value="shadow" />
                                        </styleClass>
                                        <children>
-                                          <LineChart fx:id="home_totalTeacherChart" layoutX="-127.0" layoutY="-200.0" prefHeight="200.0" prefWidth="402.4" title="Total Teachers" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                            <xAxis>
-                                              <CategoryAxis side="BOTTOM" />
-                                            </xAxis>
-                                            <yAxis>
-                                              <NumberAxis side="LEFT" />
-                                            </yAxis>
-                                          </LineChart>
+                                          <ImageView fitHeight="168.0" fitWidth="273.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@images/OIP.jpg" />
+                                             </image>
+                                          </ImageView>
                                        </children>
                                     </AnchorPane>
-                                    <AnchorPane layoutX="465.0" layoutY="351.0" prefHeight="160.0" prefWidth="402.0" stylesheets="@adminDesign.css">
+                                    <AnchorPane layoutX="507.0" layoutY="349.0" prefHeight="157.0" prefWidth="279.0" stylesheets="@adminDesign.css">
                                        <styleClass>
                                           <String fx:value="white-bg" />
                                           <String fx:value="shadow" />
                                        </styleClass>
                                        <children>
-                                          <LineChart fx:id="home_totalClassChart" layoutX="-143.0" layoutY="-159.0" prefHeight="241.6" prefWidth="402.4" title="Total Classes" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                            <xAxis>
-                                              <CategoryAxis side="BOTTOM" />
-                                            </xAxis>
-                                            <yAxis>
-                                              <NumberAxis side="LEFT" />
-                                            </yAxis>
-                                          </LineChart>
+                                          <ImageView fitHeight="178.0" fitWidth="279.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@images/enviroment.jpg" />
+                                             </image>
+                                          </ImageView>
                                        </children>
                                     </AnchorPane>
                                  </children>
@@ -228,7 +216,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="student_form" layoutX="68.0" layoutY="61.0" prefHeight="554.4" prefWidth="898.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="student_form" layoutX="68.0" layoutY="61.0" prefHeight="554.4" prefWidth="898.4" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="9.0" layoutY="11.0" prefHeight="531.0" prefWidth="880.0" stylesheets="@adminDesign.css">
                                  <styleClass>
