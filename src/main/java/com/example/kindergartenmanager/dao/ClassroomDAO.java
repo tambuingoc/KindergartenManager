@@ -59,6 +59,22 @@ public class ClassroomDAO extends DAO{
         return false;
     }
 
+    public ObservableList createTeacherList() {
+        ObservableList listC = FXCollections.observableArrayList();
+        String listClass = "SELECT * from Teachers";
+        try {
+            PreparedStatement prepare = con.prepareStatement(listClass);
+            ResultSet result = prepare.executeQuery();
+
+            while (result.next()) {
+                listC.add(result.getString("name"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listC;
+    }
+
     public boolean updateClassroom(Classroom classroom) {
         String updateData = "UPDATE Classrooms SET quality = ?, room = ?, teacherName = ?, year = ? WHERE name = ?";
         try {

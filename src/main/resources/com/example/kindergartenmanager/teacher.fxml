@@ -179,11 +179,11 @@
                         </ImageView>
                      </children>
                   </AnchorPane>
-                  <AnchorPane layoutX="57.0" layoutY="303.0" prefHeight="116.0" prefWidth="240.0">
+                  <AnchorPane layoutX="57.0" layoutY="296.0" prefHeight="134.0" prefWidth="230.0">
                      <children>
-                        <ImageView fitHeight="151.0" fitWidth="240.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="134.0" fitWidth="230.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@images/lop.jpg" />
+                              <Image url="@images/vin2.jpg" />
                            </image>
                         </ImageView>
                      </children></AnchorPane>

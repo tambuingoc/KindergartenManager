@@ -70,6 +70,23 @@ public class TeacherDAO extends DAO {
         return false;
     }
 
+    //create list class
+    public ObservableList createClassList() {
+        ObservableList listC = FXCollections.observableArrayList();
+        String listClass = "SELECT * from Classrooms";
+        try {
+            PreparedStatement prepare = con.prepareStatement(listClass);
+            ResultSet result = prepare.executeQuery();
+
+            while (result.next()) {
+                listC.add(result.getString("name"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listC;
+    }
+
     public boolean updateTeacher(Teacher teacher) {
         String sql = "UPDATE Teachers SET name = ?, gender = ?, address = ?, phone = ?, dob = ?, cardID = ?, degree = ?, className = ?, salary = ?, image = ? WHERE teacherNum = ?";
 

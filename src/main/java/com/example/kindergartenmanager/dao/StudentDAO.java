@@ -97,6 +97,23 @@ public class StudentDAO extends DAO {
         return false;
     }
 
+    public ObservableList createClassList() {
+        ObservableList listC = FXCollections.observableArrayList();
+        String listClass = "SELECT * from Classrooms";
+
+        try {
+
+            PreparedStatement prepare = con.prepareStatement(listClass);
+            ResultSet result = prepare.executeQuery();
+
+            while (result.next()) {
+                listC.add(result.getString("name"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listC;
+    }
     public boolean updateStudent(Student student) {
         String updateData = "UPDATE Students SET yearSt = ?, classNameSt = ?, nameSt = ?, genderSt = ?, addressSt = ?, birthSt = ?, parentNameSt = ?, phoneSt = ?, statusSt = ?, imageSt = ? WHERE studentNum = ?";
 

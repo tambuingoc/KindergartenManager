@@ -595,24 +595,8 @@ public class AdminController implements Initializable {
 
     //Add class for Student lấy từ bảng class
     public void addStudentClassList() {
-        String listClass = "SELECT * from Classrooms";
-        connect = DBUtils.connectDb();
-
-        try {
-
-            ObservableList listC = FXCollections.observableArrayList();
-
-            prepare = connect.prepareStatement(listClass);
-            result = prepare.executeQuery();
-
-            while (result.next()) {
-                listC.add(result.getString("name"));
-            }
-            cb_studentClass.setItems(listC);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ObservableList listC = studentDAO.createClassList();
+        cb_studentClass.setItems(listC);
     }
 
     //Add gender to student
@@ -918,24 +902,9 @@ public class AdminController implements Initializable {
 
     //Add class to teacher
     public void addTeacherClassList() {
-        String listClass = "SELECT * from Classrooms";
-        connect = DBUtils.connectDb();
+        ObservableList listC = teacherDAO.createClassList();
+        cb_teacherClassID.setItems(listC);
 
-        try {
-
-            ObservableList listC = FXCollections.observableArrayList();
-
-            prepare = connect.prepareStatement(listClass);
-            result = prepare.executeQuery();
-
-            while (result.next()) {
-                listC.add(result.getString("name"));
-            }
-            cb_teacherClassID.setItems(listC);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     //Add degree to teacher
@@ -1017,8 +986,6 @@ public class AdminController implements Initializable {
         tf_className.setText(String.valueOf(classD.getName()));
         tf_classQualityStudent.setText(String.valueOf(classD.getQuality()));
         tf_classRoom.setText(String.valueOf(classD.getRoom()));
-//        tf_classTeacherName.setText(String.valueOf(classD.getTeacherName()));
-//        cb_classYear: giải quyết 1 hàm sau
     }
 
     public void addClassroomYearList() {
@@ -1167,26 +1134,9 @@ public class AdminController implements Initializable {
     }
 
     public void addClassroomTeacherNameList() {
-        String listClass = "SELECT * from Teachers";
-        connect = DBUtils.connectDb();
-
-        try {
-
-            ObservableList listC = FXCollections.observableArrayList();
-
-            prepare = connect.prepareStatement(listClass);
-            result = prepare.executeQuery();
-
-            while (result.next()) {
-                listC.add(result.getString("name"));
-            }
-            cb_classTeacherName.setItems(listC);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ObservableList listC = classroomDAO.createTeacherList();
+        cb_classTeacherName.setItems(listC);
     }
-
 
     //Chuyển đổi giữa các form home, student, teacher, class, schedule
     public void swichForm(ActionEvent event) {
@@ -1296,10 +1246,6 @@ public class AdminController implements Initializable {
         stage.setIconified(true);
     }
 
-    //Student.java(Model)
-    //ADD STUDENT TO STUDENT_FORM
-
-
     public void logout() {
         try {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -1327,7 +1273,6 @@ public class AdminController implements Initializable {
             e.printStackTrace();
         }
     }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         account();
