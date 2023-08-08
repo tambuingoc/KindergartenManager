@@ -14,10 +14,12 @@ public class Teacher {
     private String className;
     private Float salary;
     private String image;
+    private String username;
+    private String password;
 
     public Teacher() {}
 
-    public Teacher(Integer teacherNum, String name, String gender, String address, String phone, Date dob, String cardID, String degree, String className, Float salary, String image) {
+    public Teacher(Integer teacherNum, String name, String gender, String address, String phone, Date dob, String cardID, String degree, String className, Float salary, String image, String username, String password) {
         this.teacherNum = teacherNum;
         this.name = name;
         this.gender = gender;
@@ -29,6 +31,8 @@ public class Teacher {
         this.className = className;
         this.salary = salary;
         this.image = image;
+        this.username = username;
+        this.password = password;
     }
 
     public Integer getTeacherNum() {
@@ -117,5 +121,21 @@ public class Teacher {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

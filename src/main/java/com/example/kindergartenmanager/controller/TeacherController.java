@@ -1,6 +1,9 @@
 package com.example.kindergartenmanager.controller;
 
 import com.example.kindergartenmanager.dao.StudentDAO;
+import com.example.kindergartenmanager.dao.TeacherDAO;
+import com.example.kindergartenmanager.helper.Helper;
+import com.example.kindergartenmanager.model.Notice;
 import com.example.kindergartenmanager.model.Student;
 import com.example.kindergartenmanager.model.User;
 import javafx.collections.FXCollections;
@@ -142,6 +145,8 @@ public class TeacherController implements Initializable {
     private Label user;
 
     private StudentDAO studentDAO = new StudentDAO();
+    private TeacherDAO teacherDAO = new TeacherDAO();
+    private Notice notice = new Notice();
 
     public void account() {
         user.setText(User.username);
@@ -149,53 +154,45 @@ public class TeacherController implements Initializable {
     public void close() {
         System.exit(0);
     }
-    public void logout() {
+    public void logout(ActionEvent event) {
         try {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmation Message");
-            alert.setHeaderText(null);
-            alert.setContentText("Are you sure you want to logout?");
-            Optional<ButtonType> option = alert.showAndWait();
-
-            if(option.get().equals(ButtonType.OK)) {
+            Optional<ButtonType> option = notice.confirmLogout();
+            if (option.get().equals(ButtonType.OK)) {
                 //Hide your dashboard form
                 logout.getScene().getWindow().hide();
 
                 //Link to login form
-                Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));
-                Stage stage = new Stage();
-                Scene scene = new Scene(root);
-
-                stage.initStyle(StageStyle.TRANSPARENT);
-
-                stage.setScene(scene);
-                stage.show();
+                Helper.changeScence(event, "login.fxml");
             } else return;
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 //Home form
     public void homeDisplayTotalStudents() {
-
-        int countStudent = studentDAO.countTotalStudentsLa2();
+        String nameTeacher = teacherDAO.getNameTeacherByUsername(User.username);
+        int countStudent = studentDAO.countTotalStudentByTeacher(nameTeacher);
         home_total_st_class.setText(String.valueOf(countStudent));
 }
-    public void homeDisplayTotalClasses() {
-        int countMale = studentDAO.countTotalMaleStudents();
+    public void homeDisplayTotalMale() {
+        String nameTeacher = teacherDAO.getNameTeacherByUsername(User.username);
+        int countMale = studentDAO.countTotalMaleStudents(nameTeacher);
         home_total_male_class.setText(String.valueOf(countMale));
     }
     public void homeDisplayTotalFemale() {
-        int countFemale = (studentDAO.countTotalStudentsLa2()-studentDAO.countTotalMaleStudents());
+        String nameTeacher = teacherDAO.getNameTeacherByUsername(User.username);
+        int countFemale = (studentDAO.countTotalStudentByTeacher(nameTeacher)-studentDAO.countTotalMaleStudents(nameTeacher));
         home_total_femal_class.setText(String.valueOf(countFemale));
     }
 
     //Show student information in listClass form
-    private ObservableList<Student> addStudentsListDLa2;
-    private ObservableList<Student> addStudentsListD;
+    private ObservableList<Student> addStudentsListData;
+
     public void addStudentShowListData() {
-        addStudentsListDLa2 = studentDAO.addStudentListDataLa2();
+        String nameTeacher = teacherDAO.getNameTeacherByUsername(User.username);
+        addStudentsListData = studentDAO.getStudentsByTeacherName(nameTeacher);
 
         st_col_id.setCellValueFactory(new PropertyValueFactory<>("studentNum"));
         st_col_year.setCellValueFactory(new PropertyValueFactory<>("yearSt"));
@@ -208,19 +205,21 @@ public class TeacherController implements Initializable {
         st_col_phone.setCellValueFactory(new PropertyValueFactory<>("phoneSt"));
         st_col_status.setCellValueFactory(new PropertyValueFactory<>("statusSt"));
 
-        table_stView.setItems(addStudentsListDLa2);
+        table_stView.setItems(addStudentsListData);
     }
 //ATTENDENCE FORM
-    //Show student information in Student Attendance form
+    //Show student information in Student Attendance form base on teacherName
     public void showStudentAttendence() {
-        addStudentsListD = studentDAO.addStudentListDataLa2();
+        String nameTeacher = teacherDAO.getNameTeacherByUsername(User.username);
+        addStudentsListData = studentDAO.getStudentsByTeacherName(nameTeacher);
+
         student_col_id.setCellValueFactory(new PropertyValueFactory<>("studentNum"));
         student_col_year.setCellValueFactory(new PropertyValueFactory<>("yearSt"));
         student_col_class.setCellValueFactory(new PropertyValueFactory<>("classNameSt"));
         student_col_name.setCellValueFactory(new PropertyValueFactory<>("nameSt"));
         student_col_birth.setCellValueFactory(new PropertyValueFactory<>("birthSt"));
 
-        student_tableView.setItems(addStudentsListD);
+        student_tableView.setItems(addStudentsListData);
     }
 
     //choosen attendence status
@@ -234,9 +233,6 @@ public class TeacherController implements Initializable {
         attendence_status.setItems(ObList);
     }
 
-    public void addStudentAttendenceStatus() {
-
-    }
     public void swichForm(ActionEvent event) {
         if(event.getSource() == home) {
             home.setStyle("-fx-background-color:linear-gradient(to bottom right, #86c3e4, #83dfb4)");
@@ -250,7 +246,7 @@ public class TeacherController implements Initializable {
 
             homeDisplayTotalStudents();
             homeDisplayTotalFemale();
-            homeDisplayTotalClasses();
+            homeDisplayTotalMale();
 
         } else if(event.getSource() == classlist) {
             classlist.setStyle("-fx-background-color: linear-gradient(to bottom right, #86c3e4, #83dfb4)");
@@ -294,12 +290,12 @@ public class TeacherController implements Initializable {
             analysis.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
         }
     }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        account();
         homeDisplayTotalStudents();
         homeDisplayTotalFemale();
-        homeDisplayTotalClasses();
+        homeDisplayTotalMale();
     }
 }
 

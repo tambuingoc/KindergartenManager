@@ -207,3 +207,6 @@
     -fx-cursor: hand;
     -fx-padding: 50px 0px 0px 0px
 }
+.user-label {
+    -fx-alignment: CENTER;
+}

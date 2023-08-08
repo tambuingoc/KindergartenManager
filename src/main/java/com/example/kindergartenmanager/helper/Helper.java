@@ -41,7 +41,6 @@ public class Helper {
         Parent root = null;
         String packageName= "/com/example/kindergartenmanager/";
         try {
-//            root = FXMLLoader.load(DBUtils.class.getResource(packageName+fxmlFile));
             root = FXMLLoader.load(DAO.class.getResource(packageName+fxmlFile));
         } catch (IOException e) {
             throw new RuntimeException(e);

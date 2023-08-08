@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
+import java.util.List;
 
 public class StudentDAO extends DAO {
 
@@ -27,34 +28,24 @@ public class StudentDAO extends DAO {
         return countStudent;
     }
 
-    public int countTotalStudentsLa2() {
-        String sql = "SELECT COUNT(student_id) as count FROM Students WHERE classNameSt = 'Lá 2'";
+    public int countTotalStudentByTeacher(String teacherName) {
+        ObservableList<Student> studentList = getStudentsByTeacherName(teacherName);
         int countStudent = 0;
-        try {
-            PreparedStatement ps = con.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
-                countStudent = rs.getInt("count");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        for(Student student : studentList) {
+            countStudent += 1;
         }
         return countStudent;
     }
 
-    public int countTotalMaleStudents() {
-        String sql = "SELECT COUNT(student_id) as count FROM Students WHERE genderSt = 'Nam' AND classNameSt = 'Lá 2'";
-        int countMaleStudnet = 0;
-        try {
-            PreparedStatement ps = con.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
-                countMaleStudnet = rs.getInt("count");
+    public int countTotalMaleStudents(String teacherName) {
+        ObservableList<Student> studentList = getStudentsByTeacherName(teacherName);
+        int countMaleStudent = 0;
+        for(Student student : studentList) {
+            if(student.getGenderSt().equals("Nam")) {
+                countMaleStudent += 1;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        return countMaleStudnet;
+        return countMaleStudent;
     }
 
     public boolean createStudent(Student student){
@@ -70,7 +61,7 @@ public class StudentDAO extends DAO {
             ps.setString(6, student.getAddressSt());
             ps.setString(7, student.getBirthSt().toString());
             ps.setString(8, student.getParentNameSt());
-            ps.setString(9, student.getParentNameSt());
+            ps.setString(9, student.getPhoneSt());
             ps.setString(10, (String) student.getStatusSt());
             ps.setString(11, student.getImageSt());
             ps.executeUpdate();
@@ -140,12 +131,12 @@ public class StudentDAO extends DAO {
     }
 
     public boolean deleteStudent(Student student) {
-        String deleteData = "DELETE FROM Students WHERE studentNum = '"
-                + student.getStudentNum() + "'";
+        String deleteData = "DELETE FROM Students WHERE studentNum = ?";
         try {
-            Statement statement = con.createStatement();
-            statement.executeUpdate(deleteData);
-            return true;
+            PreparedStatement preparedStatement = con.prepareStatement(deleteData);
+            preparedStatement.setInt(1, student.getStudentNum());
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -182,36 +173,33 @@ public class StudentDAO extends DAO {
         return listStudents;
     }
 
-    //Return list Student of className = Lá 2
-    public ObservableList<Student> addStudentListDataLa2() {
-
-        ObservableList<Student> listStudents = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM Students WHERE classNameSt = 'Lá 2'";
-
-        try {
-            Student studentD;
-            PreparedStatement prepare = con.prepareStatement(sql);
-            ResultSet result = prepare.executeQuery();
-            while (result.next()) {
-                studentD = new Student(result.getInt("studentNum"),
-                        result.getString("yearSt"),
-                        result.getString("classNameSt"),
-                        result.getString("nameSt"),
-                        result.getString("genderSt"),
-                        result.getString("addressSt"),
-                        result.getDate("birthSt"),
-                        result.getString("parentNameSt"),
-                        result.getString("phoneSt"),
-                        result.getString("statusSt"),
-                        result.getString("imageSt"));
-
-                listStudents.add(studentD);
+    //Return list students by teacherName
+    public ObservableList<Student> getStudentsByTeacherName(String teacherName) {
+        ObservableList<Student> students = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM Students AS s JOIN Classrooms AS c ON s.classNameSt = c.name WHERE c.teacherName LIKE ?";
+        try (PreparedStatement ps = DAO.con.prepareStatement(sql)) {
+            ps.setString(1, "%" + teacherName + "%");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    // create a Student object from the result set and add it to the list
+                    Student student = new Student();
+                    student.setStudentNum(rs.getInt("studentNum"));
+                    student.setYearSt(rs.getString("yearSt"));
+                    student.setClassNameSt(rs.getString("classNameSt"));
+                    student.setNameSt(rs.getString("nameSt"));
+                    student.setGenderSt(rs.getString("genderSt"));
+                    student.setAddressSt(rs.getString("addressSt"));
+                    student.setBirthSt(rs.getDate("birthSt"));
+                    student.setParentNameSt(rs.getString("parentNameSt"));
+                    student.setPhoneSt(rs.getString("phoneSt"));
+                    student.setStatusSt(rs.getString("statusSt"));
+                    students.add(student);
+                }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return listStudents;
+        return students;
     }
-
 }
 

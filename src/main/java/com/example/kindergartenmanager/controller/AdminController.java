@@ -1,10 +1,8 @@
 package com.example.kindergartenmanager.controller;
 
 import com.example.kindergartenmanager.dao.*;
-import com.example.kindergartenmanager.model.Classroom;
-import com.example.kindergartenmanager.model.Student;
-import com.example.kindergartenmanager.model.Teacher;
-import com.example.kindergartenmanager.model.User;
+import com.example.kindergartenmanager.helper.Helper;
+import com.example.kindergartenmanager.model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -269,6 +267,12 @@ public class AdminController implements Initializable {
     private TableColumn<Teacher, Float> teacher_col_salary;
 
     @FXML
+    private TableColumn<?, ?> teacher_col_password;
+
+    @FXML
+    private TableColumn<?, ?> teacher_col_username;
+
+    @FXML
     private AnchorPane teacher_form;
 
     @FXML
@@ -327,6 +331,11 @@ public class AdminController implements Initializable {
 
     @FXML
     private TextField tf_teacher_IDCard;
+    @FXML
+    private TextField tf_teacherUserName;
+
+    @FXML
+    private TextField tf_teacherPassword;
 
     private Connection connect;
     private PreparedStatement prepare;
@@ -337,6 +346,7 @@ public class AdminController implements Initializable {
     private StudentDAO studentDAO = new StudentDAO();
     private TeacherDAO teacherDAO = new TeacherDAO();
     private ClassroomDAO classroomDAO = new ClassroomDAO();
+    private Notice notice = new Notice();
 
     public void homeDisplayTotalStudents() {
         int countStudent = studentDAO.countTotalStudents();
@@ -366,11 +376,7 @@ public class AdminController implements Initializable {
                 || tf_studentPhone.getText().isEmpty()
                 || cb_studentStatus.getSelectionModel().getSelectedItem() == null
                 || getData.path == null || getData.path == "") {
-            alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error Message");
-            alert.setHeaderText(null);
-            alert.setContentText("Please fill all the blank fields");
-            alert.showAndWait();
+            notice.errorBlankField();
             return false;
         }
         return true;
@@ -413,18 +419,10 @@ public class AdminController implements Initializable {
                 boolean result = studentDAO.createStudent(student);
 
                 if (result == false) {
-                    alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error Message");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Add Student Failed!");
-                    alert.showAndWait();
+                    notice.falseAdd();
                 }
                 else {
-                    alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Information Message");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Successfully Added!");
-                    alert.showAndWait();
+                    notice.successAdd();
                     //TO UPDATE THE TABLEVIEW
                     addStudentShowListData();
                     //TO CLEAR THE FIELDS
@@ -472,11 +470,7 @@ public class AdminController implements Initializable {
                     boolean result = studentDAO.updateStudent(student);
 
                     if (result == true) {
-                        alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Information Message");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Successfully Updated!");
-                        alert.showAndWait();
+                        notice.successUpdate();
 
                         addStudentShowListData();
                         addStudentClear();
@@ -502,15 +496,10 @@ public class AdminController implements Initializable {
                 alert.setContentText("Are you sure you want to DELETE Student #" + tf_studentID.getText() + "?");
                 Optional<ButtonType> option = alert.showAndWait();
                 if (option.get().equals(ButtonType.OK)) {
-                    Student student = new Student();
-                    student.setStudentNum(Integer.parseInt(tf_studentID.getText()));
+                    Student student = createSt();
                     boolean result = studentDAO.deleteStudent(student);
                     if(result == true) {
-                        alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Information Message");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Successfully Deleted!");
-                        alert.showAndWait();
+                        notice.successDelete();
 
                         addStudentShowListData();
                         addStudentClear();
@@ -669,7 +658,6 @@ public class AdminController implements Initializable {
 
     }
 
-
     //LÀM VIỆC VỚI TEACHER FORM
     //Check teacher valid?
     public boolean validateTeacher() {
@@ -684,11 +672,10 @@ public class AdminController implements Initializable {
                 || cb_teacherDegree.getSelectionModel().getSelectedItem() == null
                 || cb_teacherClassID.getSelectionModel().getSelectedItem() == null
                 || tf_teacherSalary.getText().isEmpty()
+                || tf_teacherUserName.getText().isEmpty()
+                || tf_teacherPassword.getText().isEmpty()
                 || getData.path == null || getData.path == "") {
-            alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error Message");
-            alert.setHeaderText(null);
-            alert.setContentText("Please fill all the blank fields");
+            notice.errorBlankField();
             return false;
         }
         return true;
@@ -706,6 +693,8 @@ public class AdminController implements Initializable {
         teacher.setDegree((String) cb_teacherDegree.getSelectionModel().getSelectedItem());
         teacher.setClassName((String) cb_teacherClassID.getSelectionModel().getSelectedItem());
         teacher.setSalary(Float.parseFloat(tf_teacherSalary.getText()));
+        teacher.setUsername(tf_teacherUserName.getText());
+        teacher.setPassword(tf_teacherPassword.getText());
         try {
             String uri = getData.path;
             uri = uri.replace("\\", "\\\\");
@@ -733,11 +722,7 @@ public class AdminController implements Initializable {
                     Teacher teacher = createNewTeacher();
                     boolean result = teacherDAO.createTeacher(teacher);
                     if(result == true) {
-                        alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Information Message");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Successfully Added!");
-                        alert.showAndWait();
+                        notice.successAdd();
                         //TO UPDATE THE TABLEVIEW
                         addTeacherShowListData();
                         //TO CLEAR THE FIELDS
@@ -764,6 +749,8 @@ public class AdminController implements Initializable {
         tf_teacherSalary.setText("");
         teacher_imageView.setImage(null);
         getData.path = "";
+        tf_teacherUserName.setText("");
+        tf_teacherPassword.setText("");
     }
 
     //Process update button in Teacher form
@@ -784,11 +771,7 @@ public class AdminController implements Initializable {
                     boolean result = teacherDAO.updateTeacher(teacher);
 
                     if (result) {
-                        alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Information Message");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Successfully Updated!");
-                        alert.showAndWait();
+                        notice.successUpdate();
                         addTeacherShowListData();
                         addTeacherClear();
                     }
@@ -817,11 +800,7 @@ public class AdminController implements Initializable {
                     Teacher teacher = createNewTeacher();
                     boolean result = teacherDAO.deleteTeacher(teacher);
                     if(result) {
-                        alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Information Message");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Successfully Deleted!");
-                        alert.showAndWait();
+                        notice.successDelete();
                         addTeacherShowListData();
                         addTeacherClear();
                     }
@@ -935,6 +914,8 @@ public class AdminController implements Initializable {
         teacher_col_degree.setCellValueFactory(new PropertyValueFactory<>("degree"));
         teacher_col_classID.setCellValueFactory(new PropertyValueFactory<>("className"));
         teacher_col_salary.setCellValueFactory(new PropertyValueFactory<>("salary"));
+        teacher_col_username.setCellValueFactory(new PropertyValueFactory<>("username"));
+        teacher_col_password.setCellValueFactory(new PropertyValueFactory<>("password"));
 
         teacher_tableView.setItems(addTeachersListD);
     }
@@ -955,6 +936,8 @@ public class AdminController implements Initializable {
         tf_teacherPhone.setText(String.valueOf(teacherD.getPhone()));
         tf_teacher_IDCard.setText(String.valueOf(teacherD.getCardID()));
         tf_teacherSalary.setText(String.valueOf(teacherD.getSalary()));
+        tf_teacherUserName.setText(String.valueOf(teacherD.getUsername()));
+        tf_teacherPassword.setText(String.valueOf(teacherD.getPassword()));
 
         String uri = "file:" + teacherD.getImage();
         image = new Image(uri, 130, 147, false, true);
@@ -1006,11 +989,7 @@ public class AdminController implements Initializable {
                 || tf_classRoom.getText().isEmpty()
                 || cb_classTeacherName.getSelectionModel().getSelectedItem() == null
                 || cb_classYear.getSelectionModel().getSelectedItem() == null) {
-            alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error Message");
-            alert.setHeaderText(null);
-            alert.setContentText("Please fill all the blank fields");
-            alert.showAndWait();
+            notice.errorBlankField();
             return false;
         }
         else {return true;}
@@ -1041,11 +1020,7 @@ public class AdminController implements Initializable {
                 Classroom classroom = createClassroom();
                 boolean rs = classroomDAO.createClass(classroom);
                 if(rs) {
-                    alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Information Message");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Successfully Added!");
-                    alert.showAndWait();
+                    notice.successAdd();
                     //TO UPDATE THE TABLEVIEW
                     addClassroomShowListData();
                     //TO CLEAR THE FIELDS
@@ -1080,11 +1055,7 @@ public class AdminController implements Initializable {
                     Classroom classroom = createClassroom();
                     boolean result = classroomDAO.updateClassroom(classroom);
                     if(result) {
-                        alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Information Message");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Successfully Updated!");
-                        alert.showAndWait();
+                        notice.successUpdate();
                         //TO DO UPDATE THE TABLEVIEW
                         addClassroomShowListData();
                         //TO CLEAR THE FIELDS
@@ -1116,11 +1087,7 @@ public class AdminController implements Initializable {
                     Classroom creClass = createClassroom();
                     boolean re = classroomDAO.deleteClassroom(creClass);
                     if(re == true) {
-                        alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Information Message");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Successfully Deleted!");
-                        alert.showAndWait();
+                        notice.successDelete();
                         //TO DO UPDATE THE TABLEVIEW
                         addClassroomShowListData();
                         //TO CLEAR THE FIELDS
@@ -1246,27 +1213,15 @@ public class AdminController implements Initializable {
         stage.setIconified(true);
     }
 
-    public void logout() {
+    public void logout(ActionEvent event) {
         try {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmation Message");
-            alert.setHeaderText(null);
-            alert.setContentText("Are you sure you want to logout?");
-            Optional<ButtonType> option = alert.showAndWait();
-
+            Optional<ButtonType> option = notice.confirmLogout();
             if (option.get().equals(ButtonType.OK)) {
                 //Hide your dashboard form
                 button_logout.getScene().getWindow().hide();
 
                 //Link to login form
-                Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));
-                Stage stage = new Stage();
-                Scene scene = new Scene(root);
-
-                stage.initStyle(StageStyle.TRANSPARENT);
-
-                stage.setScene(scene);
-                stage.show();
+                Helper.changeScence(event, "login.fxml");
             } else return;
 
         } catch (Exception e) {

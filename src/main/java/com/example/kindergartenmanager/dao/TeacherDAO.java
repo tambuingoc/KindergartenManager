@@ -32,7 +32,7 @@ public class TeacherDAO extends DAO {
     }
 
     public boolean createTeacher(Teacher teacher) {
-        String sql = "INSERT INTO Teachers (teacherNum, name, gender, address, phone, dob, cardID, degree, className, salary, image) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO Teachers (teacherNum, name, gender, address, phone, dob, cardID, degree, className, salary, image, username, password) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, teacher.getTeacherNum().toString());
@@ -46,6 +46,8 @@ public class TeacherDAO extends DAO {
             ps.setString(9, (String) teacher.getClassName());
             ps.setString(10, teacher.getSalary().toString());
             ps.setString(11, teacher.getImage());
+            ps.setString(12, teacher.getUsername());
+            ps.setString(13, teacher.getPassword());
             ps.executeUpdate();
             return true;
         } catch (Exception e) {
@@ -88,7 +90,7 @@ public class TeacherDAO extends DAO {
     }
 
     public boolean updateTeacher(Teacher teacher) {
-        String sql = "UPDATE Teachers SET name = ?, gender = ?, address = ?, phone = ?, dob = ?, cardID = ?, degree = ?, className = ?, salary = ?, image = ? WHERE teacherNum = ?";
+        String sql = "UPDATE Teachers SET name = ?, gender = ?, address = ?, phone = ?, dob = ?, cardID = ?, degree = ?, className = ?, salary = ?, image = ?, username = ?, password = ? WHERE teacherNum = ?";
 
         try {
             PreparedStatement preparedStatement = con.prepareStatement(sql);
@@ -103,7 +105,9 @@ public class TeacherDAO extends DAO {
             preparedStatement.setString(8, teacher.getClassName());
             preparedStatement.setDouble(9, teacher.getSalary());
             preparedStatement.setString(10, teacher.getImage()); // Assuming getData.path has the correct URI value.
-            preparedStatement.setInt(11, teacher.getTeacherNum());
+            preparedStatement.setString(11, teacher.getUsername());
+            preparedStatement.setString(12, teacher.getPassword());
+            preparedStatement.setInt(13, teacher.getTeacherNum());
 
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
@@ -147,14 +151,31 @@ public class TeacherDAO extends DAO {
                         result.getString("degree"),
                         result.getString("className"),
                         result.getFloat("salary"),
-                        result.getString("image"));
-
+                        result.getString("image"),
+                        result.getString("username"),
+                        result.getString("password"));
                 listTeachers.add(teacherD);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return listTeachers;
+    }
+
+    //Get teacher information form username
+    public String getNameTeacherByUsername(String userName) {
+        String name = "";
+        String sql = "SELECT name FROM Teachers WHERE username = '"+userName+"'";
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                name = rs.getString("name");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return name;
     }
 }
 
