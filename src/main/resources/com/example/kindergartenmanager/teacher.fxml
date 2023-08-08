@@ -74,14 +74,6 @@
                   <FontAwesomeIconView fill="WHITE" glyphName="EDIT" size="16" />
                </graphic>
             </Button>
-            <Button fx:id="grade" layoutX="10.0" layoutY="448.0" mnemonicParsing="false" onAction="#swichForm" prefHeight="35.0" prefWidth="178.0" styleClass="nav-btn" stylesheets="@teacherDesign.css" text="Grade">
-               <font>
-                  <Font size="14.0" />
-               </font>
-               <graphic>
-                  <FontAwesomeIconView fill="WHITE" glyphName="LINE_CHART" size="14" />
-               </graphic>
-            </Button>
             <Label fx:id="user" layoutX="24.0" layoutY="180.0" prefHeight="35.0" prefWidth="150.0" styleClass="user-label" stylesheets="@teacherDesign.css" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="19.0" />
@@ -267,13 +259,10 @@
                   <TableColumn fx:id="student_col_status" prefWidth="142.40008544921875" text="Status" />
               </columns>
             </TableView>
-            <DatePicker fx:id="date_attend" layoutX="45.0" layoutY="108.0" prefHeight="30.0" prefWidth="186.0" />
-            <Button fx:id="button_export" layoutX="799.0" layoutY="520.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="78.0" styleClass="export" stylesheets="@teacherDesign.css" text="Export" />
-            <Button fx:id="button_save" layoutX="710.0" layoutY="520.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="78.0" styleClass="save" stylesheets="@teacherDesign.css" text="Save" />
-            <Button layoutX="623.0" layoutY="520.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="65.0" text="Update" />
-            <Button layoutX="541.0" layoutY="520.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="66.0" text="Next" />
-            <Button layoutX="450.0" layoutY="520.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="66.0" text="Previous" />
-            <ComboBox fx:id="attendence_status" layoutX="121.0" layoutY="520.0" onAction="#addAttendenceStatus" prefHeight="30.0" prefWidth="167.0" promptText="Attendence status" />
+            <DatePicker fx:id="time_attendence" layoutX="45.0" layoutY="108.0" onAction="#changeDate" prefHeight="30.0" prefWidth="186.0" />
+            <Button fx:id="button_save" layoutX="776.0" layoutY="513.0" mnemonicParsing="false" onAction="#saveStatusDB" prefHeight="30.0" prefWidth="78.0" styleClass="save" stylesheets="@teacherDesign.css" text="Save" />
+            <Button fx:id="update" layoutX="688.0" layoutY="513.0" mnemonicParsing="false" onAction="#updateStatus" prefHeight="30.0" prefWidth="65.0" text="Update" />
+            <ComboBox fx:id="attendence_status" layoutX="131.0" layoutY="513.0" onAction="#addAttendenceStatus" prefHeight="30.0" prefWidth="167.0" promptText="Attendence status" />
          </children>
       </AnchorPane>
    </children>

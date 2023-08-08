@@ -41,7 +41,7 @@ public class StudentDAO extends DAO {
         ObservableList<Student> studentList = getStudentsByTeacherName(teacherName);
         int countMaleStudent = 0;
         for(Student student : studentList) {
-            if(student.getGenderSt().equals("Nam")) {
+            if(student.getGenderSt().strip().equalsIgnoreCase("Nam")) {
                 countMaleStudent += 1;
             }
         }

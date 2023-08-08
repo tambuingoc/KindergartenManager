@@ -4,9 +4,6 @@ import java.sql.Date;
 
 //Student database (Model)
 public class Student {
-
-
-
     private Integer studentNum;
     private String yearSt;
     private String classNameSt;

@@ -1,26 +1,22 @@
 package com.example.kindergartenmanager.controller;
 
+import com.example.kindergartenmanager.dao.AttendenceDAO;
 import com.example.kindergartenmanager.dao.StudentDAO;
 import com.example.kindergartenmanager.dao.TeacherDAO;
 import com.example.kindergartenmanager.helper.Helper;
-import com.example.kindergartenmanager.model.Notice;
-import com.example.kindergartenmanager.model.Student;
-import com.example.kindergartenmanager.model.User;
+import com.example.kindergartenmanager.model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.net.URL;
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +34,8 @@ public class TeacherController implements Initializable {
 
     @FXML
     private Button button_export;
+    @FXML
+    private DatePicker time_attendence;
 
     @FXML
     private Button button_save;
@@ -130,7 +128,7 @@ public class TeacherController implements Initializable {
     private TableColumn<?, ?> student_col_year;
 
     @FXML
-    private TableView<Student> student_tableView;
+    private TableView<StudentAttendence> student_tableView;
 
     @FXML
     private TableColumn<?, ?> student_col_id;
@@ -143,10 +141,12 @@ public class TeacherController implements Initializable {
 
     @FXML
     private Label user;
+    private ObservableList<StudentAttendence> studentAttendences = FXCollections.observableArrayList();;
 
     private StudentDAO studentDAO = new StudentDAO();
     private TeacherDAO teacherDAO = new TeacherDAO();
     private Notice notice = new Notice();
+    private AttendenceDAO attendenceDAO = new AttendenceDAO();
 
     public void account() {
         user.setText(User.username);
@@ -211,15 +211,24 @@ public class TeacherController implements Initializable {
     //Show student information in Student Attendance form base on teacherName
     public void showStudentAttendence() {
         String nameTeacher = teacherDAO.getNameTeacherByUsername(User.username);
-        addStudentsListData = studentDAO.getStudentsByTeacherName(nameTeacher);
+        // lấy 1 lần từ db để có ds students
+        // arr_2 = tạo 1 danh sách students để điểm danh = trên => show cái này -> có thểm 1 trường status trong students -> tạo class StudentAttend = student + trường status
+//        addStudentsListData = studentDAO.getStudentsByTeacherName(nameTeacher);
 
         student_col_id.setCellValueFactory(new PropertyValueFactory<>("studentNum"));
         student_col_year.setCellValueFactory(new PropertyValueFactory<>("yearSt"));
         student_col_class.setCellValueFactory(new PropertyValueFactory<>("classNameSt"));
         student_col_name.setCellValueFactory(new PropertyValueFactory<>("nameSt"));
         student_col_birth.setCellValueFactory(new PropertyValueFactory<>("birthSt"));
+        // set status
+        student_col_status.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        student_tableView.setItems(addStudentsListData);
+
+
+        student_tableView.setItems(studentAttendences);
+        student_tableView.refresh();
+        // Button update
+        // arr_2[index].setStatus = "csd"
     }
 
     //choosen attendence status
@@ -233,13 +242,37 @@ public class TeacherController implements Initializable {
         attendence_status.setItems(ObList);
     }
 
+    public void updateStatus() {
+        // lấy index hàng đang đc chọn
+        int num = student_tableView.getSelectionModel().getSelectedIndex();
+        // Lấy value
+        studentAttendences.get(num).setStatus((String) attendence_status.getSelectionModel().getSelectedItem());
+        showStudentAttendence();
+        // update
+//        student_tableView.setItems(studentAttendences);
+
+    }
+
+//Save status
+
+    public void saveStatusDB() {
+        for(StudentAttendence st:studentAttendences){
+            Attendence attendence = new Attendence();
+            attendence.setTime(java.sql.Date.valueOf(time_attendence.getValue()));
+            attendence.setStatus(st.getStatus());
+            attendence.setStudent_id(st.getStudentNum());
+            boolean re = attendenceDAO.saveStatus(attendence);
+        }
+
+    }
+
+
     public void swichForm(ActionEvent event) {
         if(event.getSource() == home) {
             home.setStyle("-fx-background-color:linear-gradient(to bottom right, #86c3e4, #83dfb4)");
             classlist.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
             record.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
             analysis.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
-            grade.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
             home_form.setVisible(true);
             classlist_form.setVisible(false);
             attendance_form.setVisible(false);
@@ -253,7 +286,6 @@ public class TeacherController implements Initializable {
             home.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
             record.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
             analysis.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
-            grade.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
             home_form.setVisible(false);
             classlist_form.setVisible(true);
             attendance_form.setVisible(false);
@@ -266,7 +298,6 @@ public class TeacherController implements Initializable {
             home.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
             classlist.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
             analysis.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
-            grade.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
             home_form.setVisible(false);
             classlist_form.setVisible(false);
             attendance_form.setVisible(true);
@@ -279,23 +310,65 @@ public class TeacherController implements Initializable {
             home.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
             record.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
             classlist.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
-            grade.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
 
-        } else if(event.getSource() == grade){
 
-            grade.setStyle("-fx-background-color: linear-gradient(to bottom right, #86c3e4, #83dfb4)");
-            home.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
-            record.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
-            classlist.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
-            analysis.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
         }
     }
+
+    public void changeDate() {
+        String nameTeacher = teacherDAO.getNameTeacherByUsername(User.username);
+        // if Query từ bàng Attendence =>nếu có record => set luôn vào studentAttendences
+        //select is(status) ....show
+        // else
+        ObservableList<StudentAttendence> attendanceData = attendenceDAO.getStudentsByAttendence(Date.valueOf(time_attendence.getValue()), nameTeacher);
+        if(!attendanceData.isEmpty() || attendanceData.size()!=0) {
+            studentAttendences = attendanceData;
+        } else {
+            studentAttendences.clear();
+            addStudentsListData = studentDAO.getStudentsByTeacherName(nameTeacher);
+            for(Student student : addStudentsListData) {
+                StudentAttendence st = new StudentAttendence();
+                // map student
+                st.setNameSt(student.getNameSt());
+                st.setYearSt(student.getYearSt());
+                st.setClassNameSt(student.getClassNameSt());
+                st.setStudentNum(student.getStudentNum());
+                st.setBirthSt(student.getBirthSt());
+                st.setStatus("");
+                studentAttendences.add(st);
+            }
+        }
+        showStudentAttendence();
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         account();
+        time_attendence.setValue(java.time.LocalDate.now());
         homeDisplayTotalStudents();
         homeDisplayTotalFemale();
         homeDisplayTotalMale();
+        String nameTeacher = teacherDAO.getNameTeacherByUsername(User.username);
+        // if Query từ bàng Attendence =>nếu có record => set luôn vào studentAttendences
+        //select is(status) ....show
+        // else
+        ObservableList<StudentAttendence> attendanceData = attendenceDAO.getStudentsByAttendence(Date.valueOf(time_attendence.getValue()), nameTeacher);
+        if(!attendanceData.isEmpty()) {
+            studentAttendences = attendanceData;
+        } else {
+            addStudentsListData = studentDAO.getStudentsByTeacherName(nameTeacher);
+            for(Student student : addStudentsListData) {
+                StudentAttendence st = new StudentAttendence();
+                // map student
+                st.setNameSt(student.getNameSt());
+                st.setYearSt(student.getYearSt());
+                st.setClassNameSt(student.getClassNameSt());
+                st.setStudentNum(student.getStudentNum());
+                st.setBirthSt(student.getBirthSt());
+                st.setStatus("");
+                studentAttendences.add(st);
+            }
+        }
     }
 }
 
