@@ -45,14 +45,6 @@
                   <FontAwesomeIconView fill="WHITE" glyphName="CHECK" size="14" />
                </graphic>
             </Button>
-            <Button fx:id="analysis" layoutX="10.0" layoutY="404.0" mnemonicParsing="false" onAction="#swichForm" prefHeight="35.0" prefWidth="178.0" styleClass="nav-btn" stylesheets="@teacherDesign.css" text="Analysis Student">
-               <font>
-                  <Font size="14.0" />
-               </font>
-               <graphic>
-                  <FontAwesomeIconView fill="WHITE" glyphName="LINE_CHART" size="14" />
-               </graphic>
-            </Button>
             <Button fx:id="logout" layoutX="16.0" layoutY="553.0" mnemonicParsing="false" onAction="#logout" prefHeight="30.0" prefWidth="78.0" styleClass="logout" stylesheets="@teacherDesign.css" text="Logout">
                <graphic>
                   <FontAwesomeIconView glyphName="SIGN_OUT" />
@@ -233,7 +225,7 @@
             </TableView>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="attendance_form" layoutX="200.0" layoutY="35.0" prefHeight="556.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
+      <AnchorPane fx:id="attendance_form" layoutX="200.0" layoutY="35.0" prefHeight="556.0" prefWidth="900.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
          <children>
             <AnchorPane prefHeight="92.0" prefWidth="900.0" styleClass="card-top" stylesheets="@teacherDesign.css" AnchorPane.bottomAnchor="473.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>

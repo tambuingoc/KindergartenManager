@@ -272,7 +272,6 @@ public class TeacherController implements Initializable {
             home.setStyle("-fx-background-color:linear-gradient(to bottom right, #86c3e4, #83dfb4)");
             classlist.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
             record.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
-            analysis.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
             home_form.setVisible(true);
             classlist_form.setVisible(false);
             attendance_form.setVisible(false);
@@ -285,7 +284,6 @@ public class TeacherController implements Initializable {
             classlist.setStyle("-fx-background-color: linear-gradient(to bottom right, #86c3e4, #83dfb4)");
             home.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
             record.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
-            analysis.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
             home_form.setVisible(false);
             classlist_form.setVisible(true);
             attendance_form.setVisible(false);
@@ -297,20 +295,11 @@ public class TeacherController implements Initializable {
             record.setStyle("-fx-background-color: linear-gradient(to bottom right, #86c3e4, #83dfb4)");
             home.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
             classlist.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
-            analysis.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
             home_form.setVisible(false);
             classlist_form.setVisible(false);
             attendance_form.setVisible(true);
             showStudentAttendence();
             addAttendenceStatus();
-
-        } else if(event.getSource() == analysis) {
-
-            analysis.setStyle("-fx-background-color: linear-gradient(to bottom right, #86c3e4, #83dfb4)");
-            home.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
-            record.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
-            classlist.setStyle("-fx-background-color:linear-gradient(to bottom right, #5189ac, #50cc8c)");
-
 
         }
     }
