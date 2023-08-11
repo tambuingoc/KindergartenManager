@@ -173,6 +173,34 @@ public class StudentDAO extends DAO {
         return listStudents;
     }
 
+    public ObservableList<Student> searchStudentByName(String name) {
+        ObservableList<Student> students = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM Students WHERE studentNum LIKE ?";
+        try (PreparedStatement ps = DAO.con.prepareStatement(sql)) {
+            ps.setString(1, "%" + name + "%");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    // create a Student object from the result set and add it to the list
+                    Student student = new Student();
+                    student.setStudentNum(rs.getInt("studentNum"));
+                    student.setYearSt(rs.getString("yearSt"));
+                    student.setClassNameSt(rs.getString("classNameSt"));
+                    student.setNameSt(rs.getString("nameSt"));
+                    student.setGenderSt(rs.getString("genderSt"));
+                    student.setAddressSt(rs.getString("addressSt"));
+                    student.setBirthSt(rs.getDate("birthSt"));
+                    student.setParentNameSt(rs.getString("parentNameSt"));
+                    student.setPhoneSt(rs.getString("phoneSt"));
+                    student.setStatusSt(rs.getString("statusSt"));
+                    students.add(student);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return students;
+    }
+
     //Return list students by teacherName
     public ObservableList<Student> getStudentsByTeacherName(String teacherName) {
         ObservableList<Student> students = FXCollections.observableArrayList();

@@ -9,10 +9,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.*;
@@ -23,7 +20,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -34,7 +30,19 @@ import java.util.*;
 import java.util.Date;
 
 public class AdminController implements Initializable {
+    @FXML
+    private Button button_addYear;
+    @FXML
+    private Button button_updateYear;
 
+    @FXML
+    private Button button_year;
+
+    @FXML
+    private Button button_yearClear;
+
+    @FXML
+    private Button button_yearDelete;
     @FXML
     private Button button_class;
 
@@ -64,9 +72,6 @@ public class AdminController implements Initializable {
 
     @FXML
     private Button button_minus;
-
-    @FXML
-    private Button button_schedule;
 
     @FXML
     private Button button_student;
@@ -190,9 +195,6 @@ public class AdminController implements Initializable {
 
     @FXML
     private AnchorPane main_form;
-
-    @FXML
-    private AnchorPane schedule_form;
 
     @FXML
     private TableColumn<Student, String> student_col_phone;
@@ -336,6 +338,33 @@ public class AdminController implements Initializable {
 
     @FXML
     private TextField tf_teacherPassword;
+    @FXML
+    private TextField tf_year;
+    @FXML
+    private TextField tf_schoolyear;
+
+    @FXML
+    private DatePicker date_end;
+
+    @FXML
+    private DatePicker date_start;
+    @FXML
+    private TableView<Year> table_yearView;
+
+    @FXML
+    private TableColumn<?, ?> year_col_endDate;
+
+    @FXML
+    private TableColumn<?, ?> year_col_id;
+
+    @FXML
+    private TableColumn<?, ?> year_col_schoolYear;
+
+    @FXML
+    private TableColumn<?, ?> year_col_startDate;
+
+    @FXML
+    private AnchorPane year_form;
 
     private Connection connect;
     private PreparedStatement prepare;
@@ -346,6 +375,7 @@ public class AdminController implements Initializable {
     private StudentDAO studentDAO = new StudentDAO();
     private TeacherDAO teacherDAO = new TeacherDAO();
     private ClassroomDAO classroomDAO = new ClassroomDAO();
+    private YearDAO yearDAO = new YearDAO();
     private Notice notice = new Notice();
 
     public void homeDisplayTotalStudents() {
@@ -514,13 +544,12 @@ public class AdminController implements Initializable {
     //Process search fields (Search Student)
     public void addStudentSearch() {
         FilteredList<Student> filter = new FilteredList<>(addStudentsListD, e -> true);
-
-        student_search.textProperty().addListener((Observable, oldValue, newValue) -> {
-            filter.setPredicate(predicateStudentData -> {
-                if (newValue == null || newValue.isEmpty()) {
+        String searchKeyword = student_search.getText();
+        filter.setPredicate(predicateStudentData -> {
+                if (searchKeyword == null || searchKeyword.isEmpty()) {
                     return true;
                 }
-                String searchKey = newValue.toLowerCase();
+                String searchKey = searchKeyword.toLowerCase();
                 if (predicateStudentData.getStudentNum().toString().contains(searchKey)) {
                     return true;
                 } else if (predicateStudentData.getYearSt().toLowerCase().contains(searchKey)) {
@@ -545,7 +574,7 @@ public class AdminController implements Initializable {
                     return false;
                 }
             });
-        });
+
         //SẮP XẾP DANH SÁCH HỌC SINH ĐƯỢC TÌM KIẾM THEO THEO BẢNG CHỮ CÁI A-Z
         SortedList<Student> sortList = new SortedList<>(filter);
         sortList.comparatorProperty().bind(student_tableView.comparatorProperty());
@@ -814,38 +843,38 @@ public class AdminController implements Initializable {
     //Process search field in Teacher form
     public void addTeacherSearch() {
         FilteredList<Teacher> filter = new FilteredList<>(addTeachersListD, e -> true);
+        String searchKey = teacher_search.getText().toLowerCase();
 
-        teacher_search.textProperty().addListener((Observable, oldValue, newValue) -> {
-            filter.setPredicate(predicateTeacherData -> {
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
-                String searchKey = newValue.toLowerCase();
-                if (predicateTeacherData.getTeacherNum().toString().contains(searchKey)) {
-                    return true;
-                } else if (predicateTeacherData.getName().toLowerCase().contains(searchKey)) {
-                    return true;
-                } else if (predicateTeacherData.getGender().toLowerCase().contains(searchKey)) {
-                    return true;
-                } else if (predicateTeacherData.getAddress().toLowerCase().contains(searchKey)) {
-                    return true;
-                } else if (predicateTeacherData.getPhone().toLowerCase().contains(searchKey)) {
-                    return true;
-                } else if (predicateTeacherData.getDob().toString().contains(searchKey)) {
-                    return true;
-                } else if (predicateTeacherData.getCardID().toLowerCase().contains(searchKey)) {
-                    return true;
-                } else if (predicateTeacherData.getDegree().toLowerCase().contains(searchKey)) {
-                    return true;
-                } else if (predicateTeacherData.getClassName().toLowerCase().contains(searchKey)) {
-                    return true;
-                } else if (predicateTeacherData.getSalary().toString().contains(searchKey)) {
-                    return true;
-                } else {
-                    return false;
-                }
-            });
+//        String searchKey = "lá";
+        filter.setPredicate(predicateTeacherData -> {
+            if (searchKey == null || searchKey.isEmpty()) {
+                return true;
+            }
+            if (predicateTeacherData.getTeacherNum().toString().contains(searchKey)) {
+                return true;
+            } else if (predicateTeacherData.getName().toLowerCase().contains(searchKey)) {
+                return true;
+            } else if (predicateTeacherData.getGender().toLowerCase().contains(searchKey)) {
+                return true;
+            } else if (predicateTeacherData.getAddress().toLowerCase().contains(searchKey)) {
+                return true;
+            } else if (predicateTeacherData.getPhone().toLowerCase().contains(searchKey)) {
+                return true;
+            } else if (predicateTeacherData.getDob().toString().contains(searchKey)) {
+                return true;
+            } else if (predicateTeacherData.getCardID().toLowerCase().contains(searchKey)) {
+                return true;
+            } else if (predicateTeacherData.getDegree().toLowerCase().contains(searchKey)) {
+                return true;
+            } else if (predicateTeacherData.getClassName().toLowerCase().contains(searchKey)) {
+                return true;
+            } else if (predicateTeacherData.getSalary().toString().contains(searchKey)) {
+                return true;
+            } else {
+                return false;
+            }
         });
+        System.out.println(searchKey);
         //SẮP XẾP DANH SÁCH HỌC SINH ĐƯỢC TÌM KIẾM THEO THEO BẢNG CHỮ CÁI A-Z
         SortedList<Teacher> sortList = new SortedList<>(filter);
         sortList.comparatorProperty().bind(teacher_tableView.comparatorProperty());
@@ -1100,25 +1129,205 @@ public class AdminController implements Initializable {
         }
     }
 
+    //Search Classroom
+    public void addClassSearch() {
+        FilteredList<Classroom> filter = new FilteredList<>(addClassroomList, e -> true);
+        String searchKey = class_search.getText().toLowerCase();
+
+        filter.setPredicate(predicateTeacherData -> {
+
+            if (searchKey == null || searchKey.isEmpty()) {
+                return true;
+            }
+            if (predicateTeacherData.getName().toString().toLowerCase().contains(searchKey)) {
+                return true;
+            } else if (predicateTeacherData.getTeacherName().toLowerCase().contains(searchKey)) {
+                return true;
+            } else if (predicateTeacherData.getYear().toLowerCase().contains(searchKey)) {
+                return true;
+            } else if (predicateTeacherData.getQuality().toString().contains(searchKey)) {
+                return true;
+            } else if (predicateTeacherData.getRoom().toLowerCase().contains(searchKey)) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+        //SẮP XẾP DANH SÁCH HỌC SINH ĐƯỢC TÌM KIẾM THEO THEO BẢNG CHỮ CÁI A-Z
+        SortedList<Classroom> sortList = new SortedList<>(filter);
+        sortList.comparatorProperty().bind(class_tableView.comparatorProperty());
+        class_tableView.setItems(sortList);
+    }
+
     public void addClassroomTeacherNameList() {
         ObservableList listC = classroomDAO.createTeacherList();
         cb_classTeacherName.setItems(listC);
     }
+//YEAR SCHOOL
+public boolean validateYear() {
+    Alert alert;
+    if (tf_year.getText().isEmpty()
+            || tf_schoolyear.getText().isEmpty()
+            || date_start.getValue() == null
+            || date_end.getValue() ==null) {
+        notice.errorBlankField();
+        return false;
+    }
+    return true;
+}
 
-    //Chuyển đổi giữa các form home, student, teacher, class, schedule
+    public Year createYear() {
+        Year year = new Year();
+        year.setId(tf_year.getText());
+        year.setSchoolYear(tf_schoolyear.getText());
+        year.setStartDate(java.sql.Date.valueOf(date_start.getValue()));
+        year.setEndDate(java.sql.Date.valueOf(date_end.getValue()));
+        return year;
+    }
+
+    //Process add button in Year form
+    //Add a new year to table
+    public void addYearAdd() {
+        try {
+            Alert alert;
+            if (validateYear() == false) return;
+
+            //CHECK STUDENT EXITS?
+            if (yearDAO.isYearExist(tf_year.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Year # " + tf_year.getText() + " was already exited!");
+                alert.showAndWait();
+            } else {
+                Year year = createYear();
+                boolean result = yearDAO.createNewYear(year);
+
+                if (result == false) {
+                    notice.falseAdd();
+                }
+                else {
+                    notice.successAdd();
+                    //TO UPDATE THE TABLEVIEW
+                    addYearShowListData();
+                    //TO CLEAR THE FIELDS
+                    addYearClear();
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //Process clear button
+    public void addYearClear() {
+        tf_year.setText("");
+        tf_schoolyear.setText("");
+        date_start.setValue(null);
+        date_end.setValue(null);
+    }
+
+    //Process with update button
+    public void addYearUpdate() {
+        try {
+            Alert alert;
+            if (tf_year.getText().isEmpty()) {
+                return;
+            } else {
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirm Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Are you sure you want to UPDATE Year #" + tf_year.getText() + "?");
+                Optional<ButtonType> option = alert.showAndWait();
+
+                if (option.get().equals(ButtonType.OK)) {
+                    Year year = createYear();
+                    boolean result = yearDAO.updateYear(year);
+
+                    if (result == true) {
+                        notice.successUpdate();
+
+                        addYearShowListData();
+                        addYearClear();
+                    }
+                } else {
+                    return;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //Process with delete button
+    public void addYearDelete() {
+        try {
+            Alert alert;
+            if (tf_year.getText().isEmpty()) {return;}
+            else {
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmation Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Are you sure you want to DELETE Year #" + tf_year.getText() + "?");
+                Optional<ButtonType> option = alert.showAndWait();
+                if (option.get().equals(ButtonType.OK)) {
+                    Year year = createYear();
+                    boolean result = yearDAO.deleteYear(year);
+                    if(result == true) {
+                        notice.successDelete();
+
+                        addYearShowListData();
+                        addYearClear();
+                    }
+                } else return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private ObservableList<Year> addYearListD;
+
+    public void addYearShowListData() {
+        addYearListD = yearDAO.addYearListData();
+
+        year_col_id.setCellValueFactory(new PropertyValueFactory<>("id"));
+        year_col_schoolYear.setCellValueFactory(new PropertyValueFactory<>("schoolYear"));
+        year_col_startDate.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+        year_col_endDate.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+
+        table_yearView.setItems(addYearListD);
+    }
+
+    //Khi kích chọn vào hàng trong bảng TableView thì nó sẽ thêm thông tin vào các trường bên dưới (ảnh, tên...)
+
+    public void addYearSelect() {
+        Year yearD = table_yearView.getSelectionModel().getSelectedItem();
+        int num = table_yearView.getSelectionModel().getSelectedIndex();
+
+        if ((num - 1) < -1) {
+            return;
+        }
+
+        tf_year.setText(String.valueOf(yearD.getId()));
+        tf_schoolyear.setText(String.valueOf(yearD.getSchoolYear()));
+        date_start.setValue(LocalDate.parse(String.valueOf(yearD.getStartDate())));
+        date_end.setValue(LocalDate.parse(String.valueOf(yearD.getEndDate())));
+    }
+        //Chuyển đổi giữa các form home, student, teacher, class, year
     public void swichForm(ActionEvent event) {
         if (event.getSource() == button_home) {
             home_form.setVisible(true);
             student_form.setVisible(false);
             teacher_form.setVisible(false);
             class_form.setVisible(false);
-            schedule_form.setVisible(false);
+            year_form.setVisible(false);
 
             button_home.setStyle("-fx-background-color: linear-gradient(to bottom right, #3f82ae, #26bf7d)");
             button_student.setStyle("-fx-background-color: transparent");
             button_teacher.setStyle("-fx-background-color: transparent");
             button_class.setStyle("-fx-background-color: transparent");
-            button_schedule.setStyle("-fx-background-color: transparent");
+            button_year.setStyle("-fx-background-color: transparent");
 
             homeDisplayTotalStudents();
             homeDisplayTotalTeachers();
@@ -1129,13 +1338,13 @@ public class AdminController implements Initializable {
             student_form.setVisible(true);
             teacher_form.setVisible(false);
             class_form.setVisible(false);
-            schedule_form.setVisible(false);
+            year_form.setVisible(false);
 
             button_student.setStyle("-fx-background-color: linear-gradient(to bottom right, #3f82ae, #26bf7d)");
             button_home.setStyle("-fx-background-color: transparent");
             button_teacher.setStyle("-fx-background-color: transparent");
             button_class.setStyle("-fx-background-color: transparent");
-            button_schedule.setStyle("-fx-background-color: transparent");
+            button_year.setStyle("-fx-background-color: transparent");
 
             //TO BECOME UPDATE ONCE YOU CLICK THE ADD STUDENTS BUTTON ON NAV
             addStudentShowListData();
@@ -1150,13 +1359,13 @@ public class AdminController implements Initializable {
             student_form.setVisible(false);
             teacher_form.setVisible(true);
             class_form.setVisible(false);
-            schedule_form.setVisible(false);
+            year_form.setVisible(false);
 
             button_teacher.setStyle("-fx-background-color: linear-gradient(to bottom right, #3f82ae, #26bf7d)");
             button_student.setStyle("-fx-background-color: transparent");
             button_home.setStyle("-fx-background-color: transparent");
             button_class.setStyle("-fx-background-color: transparent");
-            button_schedule.setStyle("-fx-background-color: transparent");
+            button_year.setStyle("-fx-background-color: transparent");
             addTeacherShowListData();
             addTeacherGenderList();
             addTeacherDegreeList();
@@ -1168,25 +1377,26 @@ public class AdminController implements Initializable {
             student_form.setVisible(false);
             teacher_form.setVisible(false);
             class_form.setVisible(true);
-            schedule_form.setVisible(false);
+            year_form.setVisible(false);
 
             button_class.setStyle("-fx-background-color: linear-gradient(to bottom right, #3f82ae, #26bf7d)");
             button_student.setStyle("-fx-background-color: transparent");
             button_teacher.setStyle("-fx-background-color: transparent");
             button_home.setStyle("-fx-background-color: transparent");
-            button_schedule.setStyle("-fx-background-color: transparent");
+            button_year.setStyle("-fx-background-color: transparent");
             addClassroomShowListData();
             addClassroomTeacherNameList();
             addClassroomYearList();
+            addClassSearch();
 
-        } else if (event.getSource() == button_schedule) {
+        } else if (event.getSource() == button_year) {
             home_form.setVisible(false);
             student_form.setVisible(false);
             teacher_form.setVisible(false);
             class_form.setVisible(false);
-            schedule_form.setVisible(true);
+            year_form.setVisible(true);
 
-            button_schedule.setStyle("-fx-background-color: linear-gradient(to bottom right, #3f82ae, #26bf7d)");
+            button_year.setStyle("-fx-background-color: linear-gradient(to bottom right, #3f82ae, #26bf7d)");
             button_student.setStyle("-fx-background-color: transparent");
             button_teacher.setStyle("-fx-background-color: transparent");
             button_class.setStyle("-fx-background-color: transparent");
