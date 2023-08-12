@@ -71,6 +71,8 @@
     -fx-background-color: linear-gradient(to bottom right, #2d658c, #2ca772);
 }
 
+
+
 .logout:hover {
     -fx-background-color: #1593e7;
 }
@@ -84,6 +86,10 @@
 
 .card {
     -fx-background-color: linear-gradient(to right, #344250, #3c6382);
+}
+
+.total-st {
+    -fx-background-color: linear-gradient(to right, #4b83a9, #46bc87);
 }
 
 .search {
@@ -200,4 +206,7 @@
     -fx-background-color: transparent;
     -fx-cursor: hand;
     -fx-padding: 50px 0px 0px 0px
+}
+.user-label {
+    -fx-alignment: CENTER;
 }

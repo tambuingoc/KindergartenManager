@@ -1,5 +1,6 @@
 package com.example.kindergartenmanager.helper;
 
+import com.example.kindergartenmanager.dao.DAO;
 import com.example.kindergartenmanager.dao.DBUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -24,14 +25,15 @@ public class Helper {
             }
         } else {
             try {
-                root = FXMLLoader.load(DBUtils.class.getResource(packageName+fxmlFile));
+//                root = FXMLLoader.load(DBUtils.class.getResource(packageName+fxmlFile));
+                root = FXMLLoader.load(DAO.class.getResource(packageName+fxmlFile));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setTitle(title);
-        stage.setScene(new Scene(root, 700, 500));
+        stage.setScene(new Scene(root, 1100, 600));
         stage.show();
     }
 
@@ -39,12 +41,12 @@ public class Helper {
         Parent root = null;
         String packageName= "/com/example/kindergartenmanager/";
         try {
-            root = FXMLLoader.load(DBUtils.class.getResource(packageName+fxmlFile));
+            root = FXMLLoader.load(DAO.class.getResource(packageName+fxmlFile));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root, 700, 500));
+        stage.setScene(new Scene(root, 1100, 600));
         stage.show();
     }
 }

@@ -1,7 +1,9 @@
 package com.example.kindergartenmanager.controller;
 
 import com.example.kindergartenmanager.dao.DBUtils;
+import com.example.kindergartenmanager.dao.SignUpDAO;
 import com.example.kindergartenmanager.helper.Helper;
+import com.example.kindergartenmanager.model.Notice;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -45,6 +47,8 @@ public class SignUpController implements Initializable {
 
     @FXML
     private TextField tf_username;
+    private SignUpDAO signUpDAO = new SignUpDAO();
+    private Notice notice = new Notice();
 
     @FXML
     public void close() {
@@ -62,105 +66,24 @@ public class SignUpController implements Initializable {
             return true;
 
         }else{
-
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-
-            alert.setTitle("Error Message");
-            alert.setHeaderText(null);
-            alert.setContentText("Invalid Email");
-            alert.showAndWait();
-
+            notice.invalidEmail();
             return false;
 
         }
     }
-    public void signup() throws Exception {
-        Connection connect = null;
-        PreparedStatement psInsert = null;
-        PreparedStatement psCheckUserExits = null;
-        ResultSet result = null;
+    public void signupUser(ActionEvent event) {
+        Alert alert;
+        if (tf_username.getText().isEmpty() || tf_password.getText().isEmpty() || tf_email.getText().isEmpty()) {
+            notice.errorBlankField();
 
-        //Thêm tài khoản mới
-        String sql1 = "INSERT INTO [Users] (username, password, email) VALUES(?,?,?)";
-        //Kiểm tra tài khoản tồn tại hay chưa (tiêu chí: tên đăng nhâp)
-        String sql2 = "SELECT * FROM [Users] WHERE username = ?";
+        } else {
 
-        try {
-            connect = DBUtils.connectDb();
-            if(connect != null) {
-                psCheckUserExits = connect.prepareCall(sql2);
-                psCheckUserExits.setString(1, tf_username.getText());
-                result = psCheckUserExits.executeQuery();
-
-                if(tf_username.getText().isEmpty() || tf_password.getText().isEmpty() || tf_email.getText().isEmpty()) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error Message");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Please fill all the blank fields");
-                    alert.showAndWait();
-                } else if(result.isBeforeFirst()) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error Message");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Username has exits!");
-                    alert.showAndWait();
-                }  else {
-                    if(validEmail()){
-                        psInsert = connect.prepareStatement(sql1);
-                        psInsert.setString(1, tf_username.getText());
-                        psInsert.setString(2, tf_password.getText());
-                        psInsert.setString(3, tf_email.getText());
-                        psInsert.executeUpdate();
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Information Message");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Successfully Sign Up");
-                        alert.showAndWait();
-
-                        button_signup.getScene().getWindow().hide();
-                        //LINK DASHBROAD
-                        Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));
-
-                        Stage stage = new Stage();
-                        Scene scene = new Scene(root);
-
-                        stage.setScene(scene);
-                        stage.show();
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if(connect != null) {
-                try {
-                    connect.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if(psInsert != null) {
-                try {
-                    psInsert.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if(psCheckUserExits != null) {
-                try {
-                    psCheckUserExits.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if(result != null) {
-                try {
-                    result.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
+            if (validEmail()) {
+                if (signUpDAO.signup(event, tf_username.getText(), tf_password.getText(), tf_email.getText())) {
+                    notice.successSignUp();
+                    Helper.changeScence(event, "login.fxml");
+                } else {
+                    notice.accountExist();
                 }
             }
         }

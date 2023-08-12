@@ -48,7 +48,7 @@
                   <PasswordField fx:id="tf_password" layoutX="78.0" layoutY="214.0" prefHeight="35.0" prefWidth="198.0" promptText="Password" />
                   <TextField fx:id="tf_email" layoutX="78.0" layoutY="265.0" prefHeight="35.0" prefWidth="198.0" promptText="Email Address" />
                   <Button fx:id="button_close" layoutX="299.0" layoutY="2.0" mnemonicParsing="false" onAction="#close" prefHeight="27.0" prefWidth="46.0" styleClass="close" stylesheets="@signupDesign.css" />
-                  <Button fx:id="button_signup" layoutX="76.0" layoutY="333.0" mnemonicParsing="false" onAction="#signup" prefHeight="35.0" prefWidth="198.0" styleClass="signup-btn" stylesheets="@signupDesign.css" text="Sign Up" />
+                  <Button fx:id="button_signup" layoutX="76.0" layoutY="333.0" mnemonicParsing="false" onAction="#signupUser" prefHeight="35.0" prefWidth="198.0" styleClass="signup-btn" stylesheets="@signupDesign.css" text="Sign Up" />
                   <Button fx:id="button_log_in" layoutX="228.0" layoutY="402.0" mnemonicParsing="false" onAction="#changeToLogin" style="-fx-background-color: transparent;" text="Login" textFill="#335dcf" underline="true">
                      <cursor>
                         <Cursor fx:constant="HAND" />

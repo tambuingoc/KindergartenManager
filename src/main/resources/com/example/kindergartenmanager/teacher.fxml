@@ -2,10 +2,14 @@
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
@@ -33,20 +37,12 @@
                   <FontAwesomeIconView fill="WHITE" glyphName="LIST" size="14" />
                </graphic>
             </Button>
-            <Button fx:id="record" layoutX="11.0" layoutY="361.0" mnemonicParsing="false" onAction="#swichForm" prefHeight="35.0" prefWidth="178.0" styleClass="nav-btn" stylesheets="@teacherDesign.css" text="Student Record">
+            <Button fx:id="record" layoutX="11.0" layoutY="361.0" mnemonicParsing="false" onAction="#swichForm" prefHeight="35.0" prefWidth="178.0" styleClass="nav-btn" stylesheets="@teacherDesign.css" text="Student Attendance">
                <font>
                   <Font size="14.0" />
                </font>
                <graphic>
                   <FontAwesomeIconView fill="WHITE" glyphName="CHECK" size="14" />
-               </graphic>
-            </Button>
-            <Button fx:id="analysis" layoutX="10.0" layoutY="404.0" mnemonicParsing="false" onAction="#swichForm" prefHeight="35.0" prefWidth="178.0" styleClass="nav-btn" stylesheets="@teacherDesign.css" text="Analysis Student">
-               <font>
-                  <Font size="14.0" />
-               </font>
-               <graphic>
-                  <FontAwesomeIconView fill="WHITE" glyphName="LINE_CHART" size="14" />
                </graphic>
             </Button>
             <Button fx:id="logout" layoutX="16.0" layoutY="553.0" mnemonicParsing="false" onAction="#logout" prefHeight="30.0" prefWidth="78.0" styleClass="logout" stylesheets="@teacherDesign.css" text="Logout">
@@ -70,15 +66,10 @@
                   <FontAwesomeIconView fill="WHITE" glyphName="EDIT" size="16" />
                </graphic>
             </Button>
-            <Button fx:id="grade" layoutX="10.0" layoutY="448.0" mnemonicParsing="false" onAction="#swichForm" prefHeight="35.0" prefWidth="178.0" styleClass="nav-btn" stylesheets="@teacherDesign.css" text="Grade">
+            <Label fx:id="user" layoutX="24.0" layoutY="180.0" prefHeight="35.0" prefWidth="150.0" styleClass="user-label" stylesheets="@teacherDesign.css" textFill="WHITE">
                <font>
-                  <Font size="14.0" />
-               </font>
-               <graphic>
-                  <FontAwesomeIconView fill="WHITE" glyphName="LINE_CHART" size="14" />
-               </graphic>
-            </Button>
-            <Label fx:id="user" layoutX="24.0" layoutY="180.0" prefHeight="35.0" prefWidth="150.0" />
+                  <Font name="System Bold" size="19.0" />
+               </font></Label>
          </children>
       </AnchorPane>
       <AnchorPane layoutX="201.0" prefHeight="35.0" prefWidth="900.0" AnchorPane.bottomAnchor="564.8" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -95,14 +86,9 @@
             </Button>
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="363.0" layoutY="216.0" prefHeight="200.0" prefWidth="200.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
+      <AnchorPane fx:id="home_form" layoutX="196.0" layoutY="42.0" prefHeight="559.0" prefWidth="906.0" visible="false">
          <children>
-            <AnchorPane layoutY="-3.0" prefHeight="92.0" prefWidth="900.0" styleClass="card-top" stylesheets="@teacherDesign.css" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-         </children>
-      </AnchorPane>
-      <AnchorPane layoutX="200.0" layoutY="35.0" prefHeight="556.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
-         <children>
-            <AnchorPane prefHeight="92.0" prefWidth="900.0" styleClass="card-top" stylesheets="@teacherDesign.css" AnchorPane.bottomAnchor="473.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane layoutY="-3.0" prefHeight="92.0" prefWidth="900.0" styleClass="card-top" stylesheets="@teacherDesign.css" AnchorPane.bottomAnchor="473.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="-3.0">
                <children>
                   <Label layoutX="165.0" layoutY="4.0" prefHeight="35.0" prefWidth="338.0" text="VINSCHOOL " textFill="WHITE">
                      <font>
@@ -116,27 +102,130 @@
                   </Label>
                </children>
             </AnchorPane>
-            <TableView fx:id="student_tableView" layoutX="45.0" layoutY="152.0" prefHeight="354.0" prefWidth="810.0" stylesheets="@teacherDesign.css">
+            <AnchorPane layoutY="93.0" prefHeight="474.0" prefWidth="900.0">
+               <children>
+                  <AnchorPane layoutX="29.0" layoutY="68.0" prefHeight="151.0" prefWidth="252.0" styleClass="total-st" stylesheets="@teacherDesign.css">
+                     <children>
+                        <Label layoutX="14.0" layoutY="20.0" text="Total Students" textFill="WHITE">
+                           <font>
+                              <Font name="Century" size="19.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="home_total_st_class" layoutX="206.0" layoutY="99.0" prefHeight="35.0" prefWidth="38.0" text="0" textFill="WHITE">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Label>
+                        <FontAwesomeIconView fill="#29946d" glyphName="USERS" layoutX="187.0" layoutY="50.0" size="36" text="">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </FontAwesomeIconView>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="324.0" layoutY="161.0" prefHeight="151.0" prefWidth="252.0" styleClass="total-st" stylesheets="@teacherDesign.css">
+                     <children>
+                        <Label layoutX="14.0" layoutY="24.0" text="Total Female Students" textFill="WHITE">
+                           <font>
+                              <Font size="19.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="home_total_femal_class" layoutX="199.0" layoutY="101.0" prefHeight="35.0" prefWidth="38.0" text="0" textFill="WHITE">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Label>
+                        <FontAwesomeIconView fill="#29946d" glyphName="USERS" layoutX="199.0" layoutY="51.0" size="36">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </FontAwesomeIconView>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="622.0" layoutY="245.0" prefHeight="151.0" prefWidth="252.0" styleClass="total-st" stylesheets="@teacherDesign.css">
+                     <children>
+                        <Label layoutX="14.0" layoutY="28.0" text="Total Male Students" textFill="WHITE">
+                           <font>
+                              <Font size="19.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="home_total_male_class" layoutX="199.0" layoutY="107.0" prefHeight="35.0" prefWidth="50.0" text="0" textFill="WHITE">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Label>
+                        <FontAwesomeIconView fill="#29946d" glyphName="USERS" layoutX="199.0" layoutY="51.0" size="36" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="611.0" layoutY="38.0" prefHeight="116.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fitHeight="208.0" fitWidth="229.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/enviroment.jpg" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="57.0" layoutY="296.0" prefHeight="134.0" prefWidth="230.0">
+                     <children>
+                        <ImageView fitHeight="134.0" fitWidth="230.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/vin2.jpg" />
+                           </image>
+                        </ImageView>
+                     </children></AnchorPane>
+                  <AnchorPane layoutX="313.0" layoutY="14.0" prefHeight="35.0" prefWidth="252.0" styleClass="total-st" stylesheets="@teacherDesign.css">
+                     <children>
+                        <Label layoutX="45.0" layoutY="9.0" text="Classroom: " textFill="WHITE">
+                           <font>
+                              <Font name="Century" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="teacher_classNameLabel" layoutX="157.0" layoutY="9.0" text="Name" textFill="WHITE">
+                           <font>
+                              <Font name="Century" size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="classlist_form" layoutX="200.0" layoutY="35.0" prefHeight="200.0" prefWidth="200.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
+         <children>
+            <AnchorPane prefHeight="92.0" prefWidth="900.0" styleClass="card-top" stylesheets="@teacherDesign.css" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Label layoutX="195.0" text="VINSCHOOL" textFill="WHITE">
+                     <font>
+                        <Font name="Century" size="40.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="500.0" layoutY="60.0" text="NƠI CHẮP CÁNH ƯỚC MƠ" textFill="WHITE">
+                     <font>
+                        <Font name="Century" size="20.0" />
+                     </font>
+                  </Label>
+               </children></AnchorPane>
+            <TextField fx:id="tf_search" layoutX="28.0" layoutY="103.0" prefHeight="30.0" prefWidth="170.0" promptText="Search" />
+            <FontAwesomeIconView glyphName="SEARCH" layoutX="175.0" layoutY="123.0" size="16" />
+            <TableView fx:id="table_stView" layoutX="37.0" layoutY="160.0" prefHeight="379.0" prefWidth="830.0" stylesheets="@teacherDesign.css">
               <columns>
-                <TableColumn fx:id="studnet_col_id" prefWidth="59.20001220703125" text="Student#" />
-                <TableColumn fx:id="student_col_year" prefWidth="55.20001220703125" text="Year" />
-                  <TableColumn fx:id="Student_col_class" prefWidth="85.60003662109375" text="Class" />
-                  <TableColumn fx:id="student_col_name" prefWidth="73.5999755859375" text="Name" />
-                  <TableColumn fx:id="student_col_gender" prefWidth="68.0" text="Gender" />
-                  <TableColumn fx:id="student_col_address" prefWidth="111.20001220703125" text="Address" />
-                  <TableColumn fx:id="student_col_birth" prefWidth="97.60003662109375" text="Birth Date" />
-                  <TableColumn fx:id="student_col_parent" prefWidth="107.20001220703125" text="Parent Name" />
-                  <TableColumn fx:id="student_col_phone" prefWidth="76.7999267578125" text="Phone" />
-                  <TableColumn fx:id="student_col_status" prefWidth="76.79998779296875" text="Status" />
+                <TableColumn fx:id="st_col_id" prefWidth="75.0" text="Student #" />
+                <TableColumn fx:id="st_col_year" prefWidth="62.399993896484375" text="Year" />
+                  <TableColumn fx:id="st_col_class" prefWidth="64.80001831054688" text="Class" />
+                  <TableColumn fx:id="st_col_name" prefWidth="109.5999755859375" text="Name" />
+                  <TableColumn fx:id="st_col_gender" prefWidth="62.39996337890625" text="Gender" />
+                  <TableColumn fx:id="st_col_address" prefWidth="97.5999755859375" text="Address" />
+                  <TableColumn fx:id="st_col_dob" prefWidth="89.60003662109375" text="Birth Date" />
+                  <TableColumn fx:id="st_col_paName" prefWidth="103.20001220703125" text="Parent Name" />
+                  <TableColumn fx:id="st_col_phone" prefWidth="93.59991455078125" text="Phone Number" />
+                  <TableColumn fx:id="st_col_status" prefWidth="76.00006103515625" text="Status" />
               </columns>
             </TableView>
-            <DatePicker fx:id="date_attend" layoutX="45.0" layoutY="108.0" prefHeight="30.0" prefWidth="186.0" />
-            <Button fx:id="button_export" layoutX="799.0" layoutY="520.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="78.0" styleClass="export" stylesheets="@teacherDesign.css" text="Export" />
-            <Button fx:id="button_save" layoutX="710.0" layoutY="520.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="78.0" styleClass="save" stylesheets="@teacherDesign.css" text="Save" />
-            <Button layoutX="623.0" layoutY="520.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="65.0" text="Button" />
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="210.0" layoutY="45.0" prefHeight="556.0" prefWidth="900.0" visible="false">
+      <AnchorPane fx:id="attendance_form" layoutX="200.0" layoutY="35.0" prefHeight="556.0" prefWidth="900.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
          <children>
             <AnchorPane prefHeight="92.0" prefWidth="900.0" styleClass="card-top" stylesheets="@teacherDesign.css" AnchorPane.bottomAnchor="473.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
@@ -152,12 +241,20 @@
                   </Label>
                </children>
             </AnchorPane>
-            <TableView layoutX="301.0" layoutY="183.0" prefHeight="200.0" prefWidth="200.0">
-               <columns>
-                  <TableColumn prefWidth="75.0" text="C1" />
-                  <TableColumn prefWidth="75.0" text="C2" />
-               </columns>
+            <TableView fx:id="student_tableView" layoutX="45.0" layoutY="152.0" prefHeight="332.0" prefWidth="810.0" stylesheets="@teacherDesign.css">
+              <columns>
+                <TableColumn fx:id="student_col_id" prefWidth="95.19996643066406" text="Student#" />
+                <TableColumn fx:id="student_col_year" prefWidth="110.4000244140625" text="Year" />
+                  <TableColumn fx:id="student_col_class" prefWidth="111.20001220703125" text="Class" />
+                  <TableColumn fx:id="student_col_name" prefWidth="213.60003662109375" text="Name" />
+                  <TableColumn fx:id="student_col_birth" prefWidth="138.39996337890625" text="Birth Date" />
+                  <TableColumn fx:id="student_col_status" prefWidth="142.40008544921875" text="Status" />
+              </columns>
             </TableView>
+            <DatePicker fx:id="time_attendence" layoutX="45.0" layoutY="108.0" onAction="#changeDate" prefHeight="30.0" prefWidth="186.0" />
+            <Button fx:id="button_save" layoutX="776.0" layoutY="513.0" mnemonicParsing="false" onAction="#saveStatusDB" prefHeight="30.0" prefWidth="78.0" styleClass="save" stylesheets="@teacherDesign.css" text="Save" />
+            <Button fx:id="update" layoutX="688.0" layoutY="513.0" mnemonicParsing="false" onAction="#updateStatus" prefHeight="30.0" prefWidth="65.0" text="Update" />
+            <ComboBox fx:id="attendence_status" layoutX="131.0" layoutY="513.0" onAction="#addAttendenceStatus" prefHeight="30.0" prefWidth="167.0" promptText="Attendence status" />
          </children>
       </AnchorPane>
    </children>

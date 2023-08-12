@@ -1,7 +1,9 @@
 package com.example.kindergartenmanager.controller;
 
 import com.example.kindergartenmanager.dao.DBUtils;
+import com.example.kindergartenmanager.dao.LoginDAO;
 import com.example.kindergartenmanager.helper.Helper;
+import com.example.kindergartenmanager.model.Notice;
 import com.example.kindergartenmanager.model.User;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -39,86 +41,26 @@ public class LoginController implements Initializable {
     private TextField tf_username;
     @FXML
     private AnchorPane login_form;
+    private LoginDAO loginDAO = new LoginDAO();
+    private Notice notice = new Notice();
     public  void close() {
         System.exit(0);
     }
     //CREATE DATABASE
-    public void loginUser(ActionEvent event) throws Exception {
-        Connection connect = null;
-        PreparedStatement prepare = null;
-        ResultSet result = null;
-
-        String sql = "SELECT * FROM [Users] WHERE username = ? and password = ?";
-
-        try {
-            connect = DBUtils.connectDb();
-            if(connect != null){
-                prepare = connect.prepareStatement(sql);
-                prepare.setString(1, tf_username.getText());
-                prepare.setString(2, tf_password.getText());
-
-                result = prepare.executeQuery();
-                //CHECK FIELDS ARE EMPTY ?
-                if(tf_username.getText().isEmpty() || tf_password.getText().isEmpty()) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error Message");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Please fill all blank fields");
-                    alert.showAndWait();
-                } else {
-                    if(result.next()) {
-                        //To get username  that you logined
-                        User.username = result.getString("username");
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Information Message");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Successfully Login!");
-                        alert.showAndWait();
-
-                        //TO HIDE THE LOGIN FORM
-                        button_login.getScene().getWindow().hide();
-                        //LINK DASHBROAD
-                        Helper.changeScence(event,"admin.fxml");
-
-                    } else {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Error Message");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Wrong Username/Password");
-                        alert.showAndWait();
-                    }
-                }
-            }
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if(connect != null) {
-                    try {
-                        connect.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                if(prepare != null) {
-                    try {
-                        prepare.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                if(result != null) {
-                    try {
-                        result.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+    public void loginUser(ActionEvent event) throws Exception{
+        Alert alert;
+        if(tf_username.getText().isEmpty()|| tf_password.getText().isEmpty()) {
+            notice.errorBlankField();
+        } else {
+            if(loginDAO.login(event, tf_username.getText(), tf_password.getText())==false) {
+                notice.accountNotExist();
             }
         }
+    }
 
-        public void changeToSignUp(ActionEvent event) throws Exception {
-            Helper.changeScence(event,"signup.fxml", "Sign Up", null, null);
-        }
+    public void changeToSignUp(ActionEvent event) throws Exception {
+        Helper.changeScence(event,"signup.fxml", "Sign Up", null, null);
+    }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
     }

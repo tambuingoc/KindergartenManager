@@ -1,22 +1,15 @@
 package com.example.kindergartenmanager.controller;
 
-import com.example.kindergartenmanager.dao.DBUtils;
-import com.example.kindergartenmanager.dao.StudentDAO;
-import com.example.kindergartenmanager.dao.getData;
-import com.example.kindergartenmanager.model.Classroom;
-import com.example.kindergartenmanager.model.Student;
-import com.example.kindergartenmanager.model.Teacher;
-import com.example.kindergartenmanager.model.User;
+import com.example.kindergartenmanager.dao.*;
+import com.example.kindergartenmanager.helper.Helper;
+import com.example.kindergartenmanager.model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.*;
@@ -27,7 +20,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -38,7 +30,19 @@ import java.util.*;
 import java.util.Date;
 
 public class AdminController implements Initializable {
+    @FXML
+    private Button button_addYear;
+    @FXML
+    private Button button_updateYear;
 
+    @FXML
+    private Button button_year;
+
+    @FXML
+    private Button button_yearClear;
+
+    @FXML
+    private Button button_yearDelete;
     @FXML
     private Button button_class;
 
@@ -68,9 +72,6 @@ public class AdminController implements Initializable {
 
     @FXML
     private Button button_minus;
-
-    @FXML
-    private Button button_schedule;
 
     @FXML
     private Button button_student;
@@ -196,9 +197,6 @@ public class AdminController implements Initializable {
     private AnchorPane main_form;
 
     @FXML
-    private AnchorPane schedule_form;
-
-    @FXML
     private TableColumn<Student, String> student_col_phone;
 
     @FXML
@@ -271,6 +269,12 @@ public class AdminController implements Initializable {
     private TableColumn<Teacher, Float> teacher_col_salary;
 
     @FXML
+    private TableColumn<?, ?> teacher_col_password;
+
+    @FXML
+    private TableColumn<?, ?> teacher_col_username;
+
+    @FXML
     private AnchorPane teacher_form;
 
     @FXML
@@ -281,9 +285,6 @@ public class AdminController implements Initializable {
 
     @FXML
     private TableView<Teacher> teacher_tableView;
-
-    @FXML
-    private TextField tf_classID;
 
     @FXML
     private TextField tf_className;
@@ -332,6 +333,38 @@ public class AdminController implements Initializable {
 
     @FXML
     private TextField tf_teacher_IDCard;
+    @FXML
+    private TextField tf_teacherUserName;
+
+    @FXML
+    private TextField tf_teacherPassword;
+    @FXML
+    private TextField tf_year;
+    @FXML
+    private TextField tf_schoolyear;
+
+    @FXML
+    private DatePicker date_end;
+
+    @FXML
+    private DatePicker date_start;
+    @FXML
+    private TableView<Year> table_yearView;
+
+    @FXML
+    private TableColumn<?, ?> year_col_endDate;
+
+    @FXML
+    private TableColumn<?, ?> year_col_id;
+
+    @FXML
+    private TableColumn<?, ?> year_col_schoolYear;
+
+    @FXML
+    private TableColumn<?, ?> year_col_startDate;
+
+    @FXML
+    private AnchorPane year_form;
 
     private Connection connect;
     private PreparedStatement prepare;
@@ -340,8 +373,25 @@ public class AdminController implements Initializable {
     private Image image;
 
     private StudentDAO studentDAO = new StudentDAO();
+    private TeacherDAO teacherDAO = new TeacherDAO();
+    private ClassroomDAO classroomDAO = new ClassroomDAO();
+    private YearDAO yearDAO = new YearDAO();
+    private Notice notice = new Notice();
 
+    public void homeDisplayTotalStudents() {
+        int countStudent = studentDAO.countTotalStudents();
+        home_totalStudent.setText(String.valueOf(countStudent));
+    }
 
+    public void homeDisplayTotalTeachers() {
+        int countTeacher = teacherDAO.countTotalTeachers();
+        home_totalTeacher.setText(String.valueOf(countTeacher));
+    }
+
+    public void homeDisplayTotalClasses() {
+        int countClass = classroomDAO.countClassrooms();
+        home_totalClass.setText(String.valueOf(countClass));
+    }
 
     public boolean validateStudent() {
         Alert alert;
@@ -356,18 +406,32 @@ public class AdminController implements Initializable {
                 || tf_studentPhone.getText().isEmpty()
                 || cb_studentStatus.getSelectionModel().getSelectedItem() == null
                 || getData.path == null || getData.path == "") {
-            alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error Message");
-            alert.setHeaderText(null);
-            alert.setContentText("Please fill all the blank fields");
-            alert.showAndWait();
+            notice.errorBlankField();
             return false;
         }
         return true;
     }
 
+    public Student createSt() {
+        Student student = new Student();
+        student.setStudentNum(Integer.parseInt(tf_studentID.getText()));
+        student.setYearSt((String) cb_studentYear.getSelectionModel().getSelectedItem());
+        student.setClassNameSt((String) cb_studentClass.getSelectionModel().getSelectedItem());
+        student.setNameSt(tf_studentName.getText());
+        student.setGenderSt((String) cb_studentGender.getSelectionModel().getSelectedItem());
+        student.setAddressSt(tf_studentAddress.getText());
+        student.setBirthSt(java.sql.Date.valueOf(dt_studentDoB.getValue()));
+        student.setParentNameSt(tf_studentParent.getText());
+        student.setPhoneSt(tf_studentPhone.getText());
+        student.setStatusSt((String) cb_studentStatus.getSelectionModel().getSelectedItem());
+        String uri = getData.path;
+        uri = uri.replace("\\", "\\\\");
+        student.setImageSt(uri);
+        return student;
+    }
+
     //Process add button in Student form
-    //Thêm 1 học sinh mới vào bảng Student
+    //Add a new student to table
     public void addStudentAdd() {
         try {
             Alert alert;
@@ -381,42 +445,19 @@ public class AdminController implements Initializable {
                 alert.setContentText("Student # " + tf_studentID.getText() + " was already exited!");
                 alert.showAndWait();
             } else {
-                // Create student object then call addStudent method
-                Student student = new Student();
-                student.setStudentNum(Integer.parseInt(tf_studentID.getText()));
-                student.setYearSt((String) cb_studentYear.getSelectionModel().getSelectedItem());
-                student.setClassNameSt((String) cb_studentClass.getSelectionModel().getSelectedItem());
-                student.setNameSt(tf_studentName.getText());
-                student.setGenderSt((String) cb_studentGender.getSelectionModel().getSelectedItem());
-                student.setAddressSt(tf_studentAddress.getText());
-                student.setBirthSt(java.sql.Date.valueOf(dt_studentDoB.getValue()));
-                student.setParentNameSt(tf_studentParent.getText());
-                student.setPhoneSt(tf_studentPhone.getText());
-                student.setStatusSt((String) cb_studentStatus.getSelectionModel().getSelectedItem());
-                String uri = getData.path;
-                uri = uri.replace("\\", "\\\\");
-                student.setImageSt(uri);
-
+                Student student = createSt();
                 boolean result = studentDAO.createStudent(student);
 
                 if (result == false) {
-                    alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error Message");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Add Student Failed!");
-                    alert.showAndWait();
+                    notice.falseAdd();
                 }
-
-
-                alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Information Message");
-                alert.setHeaderText(null);
-                alert.setContentText("Successfully Added!");
-                alert.showAndWait();
-                //TO UPDATE THE TABLEVIEW
-                addStudentShowListData();
-                //TO CLEAR THE FIELDS
-                addStudentClear();
+                else {
+                    notice.successAdd();
+                    //TO UPDATE THE TABLEVIEW
+                    addStudentShowListData();
+                    //TO CLEAR THE FIELDS
+                    addStudentClear();
+                }
             }
 
         } catch (Exception e) {
@@ -443,41 +484,10 @@ public class AdminController implements Initializable {
 
     //Process with update button
     public void addStudentUpdate() {
-        String uri = getData.path;
-        uri = uri.replace("\\", "\\\\");
-
-        String updateData = "UPDATE Students SET "
-                + "yearSt = '" + cb_studentYear.getSelectionModel().getSelectedItem()
-                + "', classNameSt = '" + cb_studentClass.getSelectionModel().getSelectedItem()
-                + "', nameSt = '" + tf_studentName.getText()
-                + "', genderSt = '" + cb_studentGender.getSelectionModel().getSelectedItem()
-                + "', addressSt = '" + tf_studentAddress.getText()
-                + "', birthSt = '" + dt_studentDoB.getValue()
-                + "', parentNameSt = '" + tf_studentParent.getText()
-                + "', phoneSt = '" + tf_studentPhone.getText()
-                + "', statusSt = '" + cb_studentStatus.getSelectionModel().getSelectedItem()
-                + "', imageSt = '" + uri + "' WHERE studentNum = '"
-                + tf_studentID.getText() + "'";
-        connect = DBUtils.connectDb();
-
         try {
             Alert alert;
-            if (tf_studentID.getText().isEmpty()
-                    || cb_studentYear.getSelectionModel().getSelectedItem() == null
-                    || cb_studentClass.getSelectionModel().getSelectedItem() == null
-                    || tf_studentName.getText().isEmpty()
-                    || cb_studentGender.getSelectionModel().getSelectedItem() == null
-                    || tf_studentAddress.getText().isEmpty()
-                    || dt_studentDoB.getValue() == null
-                    || tf_studentParent.getText().isEmpty()
-                    || tf_studentPhone.getText().isEmpty()
-                    || cb_studentStatus.getSelectionModel().getSelectedItem() == null
-                    || getData.path == null || getData.path == "") {
-                alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error Message");
-                alert.setHeaderText(null);
-                alert.setContentText("Please fill all the blank fields");
-                alert.showAndWait();
+            if (tf_studentID.getText().isEmpty()) {
+                return;
             } else {
                 alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Confirm Message");
@@ -486,23 +496,18 @@ public class AdminController implements Initializable {
                 Optional<ButtonType> option = alert.showAndWait();
 
                 if (option.get().equals(ButtonType.OK)) {
-                    statement = connect.createStatement();
-                    statement.executeUpdate(updateData);
+                    Student student = createSt();
+                    boolean result = studentDAO.updateStudent(student);
 
-                    alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Information Message");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Successfully Updated!");
-                    alert.showAndWait();
+                    if (result == true) {
+                        notice.successUpdate();
 
-                    //TO DO UPDATE THE TABLEVIEW
-                    addStudentShowListData();
-                    //TO CLEAR THE FIELDS
-                    addStudentClear();
+                        addStudentShowListData();
+                        addStudentClear();
+                    }
                 } else {
                     return;
                 }
-                ;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -511,51 +516,24 @@ public class AdminController implements Initializable {
 
     //Process with delete button
     public void addStudentDelete() {
-        String deleteData = "DELETE FROM Students WHERE studentNum = '"
-                + tf_studentID.getText() + "'";
-
-        connect = DBUtils.connectDb();
         try {
             Alert alert;
-            if (tf_studentID.getText().isEmpty()
-                    || cb_studentYear.getSelectionModel().getSelectedItem() == null
-                    || cb_studentClass.getSelectionModel().getSelectedItem() == null
-                    || tf_studentName.getText().isEmpty()
-                    || cb_studentGender.getSelectionModel().getSelectedItem() == null
-                    || tf_studentAddress.getText().isEmpty()
-                    || dt_studentDoB.getValue() == null
-                    || tf_studentParent.getText().isEmpty()
-                    || tf_studentPhone.getText().isEmpty()
-                    || cb_studentStatus.getSelectionModel().getSelectedItem() == null
-                    || getData.path == null || getData.path == "") {
-                alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error Message");
-                alert.setHeaderText(null);
-                alert.setContentText("Please fill all the blank fields");
-                alert.showAndWait();
-            } else {
+            if (tf_studentID.getText().isEmpty()) {return;}
+             else {
                 alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Confirmation Message");
                 alert.setHeaderText(null);
                 alert.setContentText("Are you sure you want to DELETE Student #" + tf_studentID.getText() + "?");
                 Optional<ButtonType> option = alert.showAndWait();
                 if (option.get().equals(ButtonType.OK)) {
+                    Student student = createSt();
+                    boolean result = studentDAO.deleteStudent(student);
+                    if(result == true) {
+                        notice.successDelete();
 
-                    statement = connect.createStatement();
-                    statement.executeUpdate(deleteData);
-
-                    alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Information Message");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Successfully Deleted!");
-                    alert.showAndWait();
-
-                    //TO DO UPDATE THE TABLEVIEW
-                    addStudentShowListData();
-                    //TO CLEAR THE FIELDS
-                    addStudentClear();
-
-
+                        addStudentShowListData();
+                        addStudentClear();
+                    }
                 } else return;
             }
         } catch (Exception e) {
@@ -566,13 +544,12 @@ public class AdminController implements Initializable {
     //Process search fields (Search Student)
     public void addStudentSearch() {
         FilteredList<Student> filter = new FilteredList<>(addStudentsListD, e -> true);
-
-        student_search.textProperty().addListener((Observable, oldValue, newValue) -> {
-            filter.setPredicate(predicateStudentData -> {
-                if (newValue == null || newValue.isEmpty()) {
+        String searchKeyword = student_search.getText();
+        filter.setPredicate(predicateStudentData -> {
+                if (searchKeyword == null || searchKeyword.isEmpty()) {
                     return true;
                 }
-                String searchKey = newValue.toLowerCase();
+                String searchKey = searchKeyword.toLowerCase();
                 if (predicateStudentData.getStudentNum().toString().contains(searchKey)) {
                     return true;
                 } else if (predicateStudentData.getYearSt().toLowerCase().contains(searchKey)) {
@@ -597,7 +574,7 @@ public class AdminController implements Initializable {
                     return false;
                 }
             });
-        });
+
         //SẮP XẾP DANH SÁCH HỌC SINH ĐƯỢC TÌM KIẾM THEO THEO BẢNG CHỮ CÁI A-Z
         SortedList<Student> sortList = new SortedList<>(filter);
         sortList.comparatorProperty().bind(student_tableView.comparatorProperty());
@@ -636,24 +613,8 @@ public class AdminController implements Initializable {
 
     //Add class for Student lấy từ bảng class
     public void addStudentClassList() {
-        String listClass = "SELECT * from Classrooms";
-        connect = DBUtils.connectDb();
-
-        try {
-
-            ObservableList listC = FXCollections.observableArrayList();
-
-            prepare = connect.prepareStatement(listClass);
-            result = prepare.executeQuery();
-
-            while (result.next()) {
-                listC.add(result.getString("name"));
-            }
-            cb_studentClass.setItems(listC);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ObservableList listC = studentDAO.createClassList();
+        cb_studentClass.setItems(listC);
     }
 
     //Add gender to student
@@ -683,42 +644,10 @@ public class AdminController implements Initializable {
         ObservableList ObList = FXCollections.observableArrayList(statusL);
         cb_studentStatus.setItems(ObList);
     }
-
-    public ObservableList<Student> addStudentListData() {
-
-        ObservableList<Student> listStudents = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM Students";
-        connect = DBUtils.connectDb();
-
-        try {
-            Student studentD;
-            prepare = connect.prepareStatement(sql);
-            result = prepare.executeQuery();
-            while (result.next()) {
-                studentD = new Student(result.getInt("studentNum"),
-                        result.getString("yearSt"),
-                        result.getString("classNameSt"),
-                        result.getString("nameSt"),
-                        result.getString("genderSt"),
-                        result.getString("addressSt"),
-                        result.getDate("birthSt"),
-                        result.getString("parentNameSt"),
-                        result.getString("phoneSt"),
-                        result.getString("statusSt"),
-                        result.getString("imageSt"));
-
-                listStudents.add(studentD);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return listStudents;
-    }
-
     private ObservableList<Student> addStudentsListD;
 
     public void addStudentShowListData() {
-        addStudentsListD = addStudentListData();
+        addStudentsListD = studentDAO.addStudentListData();
 
         student_col_ID.setCellValueFactory(new PropertyValueFactory<>("studentNum"));
         student_col_year.setCellValueFactory(new PropertyValueFactory<>("yearSt"));
@@ -758,71 +687,76 @@ public class AdminController implements Initializable {
 
     }
 
-
     //LÀM VIỆC VỚI TEACHER FORM
+    //Check teacher valid?
+    public boolean validateTeacher() {
+        Alert alert;
+        if (tf_teacherID.getText().isEmpty()
+                || tf_teacherName.getText().isEmpty()
+                || cb_teacherGender.getSelectionModel().getSelectedItem() == null
+                || tf_teacherAddress.getText().isEmpty()
+                || tf_teacherPhone.getText().isEmpty()
+                || tf_teacherDoB.getValue() == null
+                || tf_teacher_IDCard.getText().isEmpty()
+                || cb_teacherDegree.getSelectionModel().getSelectedItem() == null
+                || cb_teacherClassID.getSelectionModel().getSelectedItem() == null
+                || tf_teacherSalary.getText().isEmpty()
+                || tf_teacherUserName.getText().isEmpty()
+                || tf_teacherPassword.getText().isEmpty()
+                || getData.path == null || getData.path == "") {
+            notice.errorBlankField();
+            return false;
+        }
+        return true;
+    }
+
+    public Teacher createNewTeacher() {
+        Teacher teacher = new Teacher();
+        teacher.setTeacherNum(Integer.parseInt(tf_teacherID.getText()));
+        teacher.setName(tf_teacherName.getText());
+        teacher.setGender((String) cb_teacherGender.getSelectionModel().getSelectedItem());
+        teacher.setAddress(tf_teacherAddress.getText());
+        teacher.setPhone(tf_teacherPhone.getText());
+        teacher.setDob(java.sql.Date.valueOf(tf_teacherDoB.getValue()));
+        teacher.setCardID(tf_teacher_IDCard.getText());
+        teacher.setDegree((String) cb_teacherDegree.getSelectionModel().getSelectedItem());
+        teacher.setClassName((String) cb_teacherClassID.getSelectionModel().getSelectedItem());
+        teacher.setSalary(Float.parseFloat(tf_teacherSalary.getText()));
+        teacher.setUsername(tf_teacherUserName.getText());
+        teacher.setPassword(tf_teacherPassword.getText());
+        try {
+            String uri = getData.path;
+            uri = uri.replace("\\", "\\\\");
+            teacher.setImage(uri);
+        } catch (Exception e) {
+
+        }
+        return teacher;
+    }
+
     //Process Add button
     public void addTeacherAdd() {
-        String insertData = "INSERT INTO Teachers (teacherNum, name, gender, address, phone, dob, cardID, degree, className, salary, image) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-        connect = DBUtils.connectDb();
         try {
             Alert alert;
-            if (tf_teacherID.getText().isEmpty()
-                    || tf_teacherName.getText().isEmpty()
-                    || cb_teacherGender.getSelectionModel().getSelectedItem() == null
-                    || tf_teacherAddress.getText().isEmpty()
-                    || tf_teacherPhone.getText().isEmpty()
-                    || tf_teacherDoB.getValue() == null
-                    || tf_teacher_IDCard.getText().isEmpty()
-                    || cb_teacherDegree.getSelectionModel().getSelectedItem() == null
-                    || cb_teacherClassID.getSelectionModel().getSelectedItem() == null
-                    || tf_teacherSalary.getText().isEmpty()
-                    || getData.path == null || getData.path == "") {
-                alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error Message");
-                alert.setHeaderText(null);
-                alert.setContentText("Please fill all the blank fields");
-                alert.showAndWait();
+            if (validateTeacher() == false) {
+                return;
             } else {
-                //CHECK TEACHER EXITS?
-                String checkData = " SELECT teacherNum FROM Teachers WHERE teacherNum = '"
-                        + tf_teacherID.getText() + "'";
-                statement = connect.createStatement();
-                result = statement.executeQuery(checkData);
-
-                if (result.next()) {
+                if(teacherDAO.isTeacherExist(tf_teacherID.getText())) {
                     alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error Message");
                     alert.setHeaderText(null);
                     alert.setContentText("Teacher # " + tf_teacherID.getText() + " was already exited!");
                     alert.showAndWait();
                 } else {
-                    prepare = connect.prepareStatement(insertData);
-                    prepare.setString(1, tf_teacherID.getText());
-                    prepare.setString(2, tf_teacherName.getText());
-                    prepare.setString(3, (String) cb_teacherGender.getSelectionModel().getSelectedItem());
-                    prepare.setString(4, tf_teacherAddress.getText());
-                    prepare.setString(5, tf_teacherPhone.getText());
-                    prepare.setString(6, String.valueOf(tf_teacherDoB.getValue()));
-                    prepare.setString(7, tf_teacher_IDCard.getText());
-                    prepare.setString(8, (String) cb_teacherDegree.getSelectionModel().getSelectedItem());
-                    prepare.setString(9, (String) cb_teacherClassID.getSelectionModel().getSelectedItem());
-                    prepare.setString(10, tf_teacherSalary.getText());
-
-                    String uri = getData.path;
-                    uri = uri.replace("\\", "\\\\");
-                    prepare.setString(11, uri);
-
-                    prepare.executeUpdate();
-
-                    alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Information Message");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Successfully Added!");
-                    alert.showAndWait();
-                    //TO UPDATE THE TABLEVIEW
-                    addTeacherListData();
-                    //TO CLEAR THE FIELDS
-                    addStudentClear();
+                    Teacher teacher = createNewTeacher();
+                    boolean result = teacherDAO.createTeacher(teacher);
+                    if(result == true) {
+                        notice.successAdd();
+                        //TO UPDATE THE TABLEVIEW
+                        addTeacherShowListData();
+                        //TO CLEAR THE FIELDS
+                        addStudentClear();
+                    }
                 }
             }
         } catch (Exception e) {
@@ -844,45 +778,16 @@ public class AdminController implements Initializable {
         tf_teacherSalary.setText("");
         teacher_imageView.setImage(null);
         getData.path = "";
+        tf_teacherUserName.setText("");
+        tf_teacherPassword.setText("");
     }
 
     //Process update button in Teacher form
     public void addTeacherUpdate() {
-        String uri = getData.path;
-        uri = uri.replace("\\", "\\\\");
-
-        String updateData = "UPDATE Teachers SET "
-                + "name = '" + tf_teacherName.getText()
-                + "', gender = '" + cb_teacherGender.getSelectionModel().getSelectedItem()
-                + "', address = '" + tf_teacherAddress.getText()
-                + "', phone = '" + tf_teacherPhone.getText()
-                + "', dob = '" + tf_teacherDoB.getValue()
-                + "', cardID = '" + tf_teacher_IDCard.getText()
-                + "', degree = '" + cb_teacherDegree.getSelectionModel().getSelectedItem()
-                + "', className = '" + cb_teacherClassID.getSelectionModel().getSelectedItem()
-                + "', salary = '" + tf_teacherSalary.getText()
-                + "', image = '" + uri + "' WHERE teacherNum = '"
-                + tf_teacherID.getText() + "'";
-        connect = DBUtils.connectDb();
-
         try {
             Alert alert;
-            if (tf_teacherID.getText().isEmpty()
-                    || tf_teacherName.getText().isEmpty()
-                    || cb_teacherGender.getSelectionModel().getSelectedItem() == null
-                    || tf_teacherAddress.getText().isEmpty()
-                    || tf_teacherPhone.getText().isEmpty()
-                    || tf_teacherDoB.getValue() == null
-                    || tf_teacher_IDCard.getText().isEmpty()
-                    || cb_teacherDegree.getSelectionModel().getSelectedItem() == null
-                    || cb_teacherClassID.getSelectionModel().getSelectedItem() == null
-                    || tf_teacherSalary.getText().isEmpty()
-                    || getData.path == null || getData.path == "") {
-                alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error Message");
-                alert.setHeaderText(null);
-                alert.setContentText("Please fill all the blank fields");
-                alert.showAndWait();
+            if (tf_teacherID.getText().isEmpty()) {
+                return;
             } else {
                 alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Confirm Message");
@@ -891,53 +796,29 @@ public class AdminController implements Initializable {
                 Optional<ButtonType> option = alert.showAndWait();
 
                 if (option.get().equals(ButtonType.OK)) {
-                    statement = connect.createStatement();
-                    statement.executeUpdate(updateData);
+                    Teacher teacher = createNewTeacher();
+                    boolean result = teacherDAO.updateTeacher(teacher);
 
-                    alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Information Message");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Successfully Updated!");
-                    alert.showAndWait();
-
-                    //TO DO UPDATE THE TABLEVIEW
-                    addTeacherListData();
-                    //TO CLEAR THE FIELDS
-                    addTeacherClear();
-                } else {
-                    return;
-                }
-                ;
+                    if (result) {
+                        notice.successUpdate();
+                        addTeacherShowListData();
+                        addTeacherClear();
+                    }
+                }else return;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception e){
+                e.printStackTrace();
+            }
         }
-    }
+
 
     //Process delete button in Teacher form
     public void addTeacherDelete() {
-        String deleteData = "DELETE FROM Teachers WHERE teacherNum = '"
-                + tf_teacherID.getText() + "'";
-
-        connect = DBUtils.connectDb();
         try {
             Alert alert;
-            if (tf_teacherID.getText().isEmpty()
-                    || tf_teacherName.getText().isEmpty()
-                    || cb_teacherGender.getSelectionModel().getSelectedItem() == null
-                    || tf_teacherAddress.getText().isEmpty()
-                    || tf_teacherPhone.getText().isEmpty()
-                    || tf_teacherDoB.getValue() == null
-                    || tf_teacher_IDCard.getText().isEmpty()
-                    || cb_teacherDegree.getSelectionModel().getSelectedItem() == null
-                    || cb_teacherClassID.getSelectionModel().getSelectedItem() == null
-                    || tf_teacherSalary.getText().isEmpty()
-                    || getData.path == null || getData.path == "") {
-                alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error Message");
-                alert.setHeaderText(null);
-                alert.setContentText("Please fill all the blank fields");
-                alert.showAndWait();
+            if (tf_teacherID.getText().isEmpty())//teacher_id not null
+            {
+                return;
             } else {
                 alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Confirmation Message");
@@ -945,22 +826,14 @@ public class AdminController implements Initializable {
                 alert.setContentText("Are you sure you want to DELETE Teacher #" + tf_teacherID.getText() + "?");
                 Optional<ButtonType> option = alert.showAndWait();
                 if (option.get().equals(ButtonType.OK)) {
-
-                    statement = connect.createStatement();
-                    statement.executeUpdate(deleteData);
-
-                    alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Information Message");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Successfully Deleted!");
-                    alert.showAndWait();
-
-                    //TO DO UPDATE THE TABLEVIEW
-                    addTeacherShowListData();
-                    //TO CLEAR THE FIELDS
-                    addTeacherClear();
-
-                } else return;
+                    Teacher teacher = createNewTeacher();
+                    boolean result = teacherDAO.deleteTeacher(teacher);
+                    if(result) {
+                        notice.successDelete();
+                        addTeacherShowListData();
+                        addTeacherClear();
+                    }
+                }else return;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -970,38 +843,38 @@ public class AdminController implements Initializable {
     //Process search field in Teacher form
     public void addTeacherSearch() {
         FilteredList<Teacher> filter = new FilteredList<>(addTeachersListD, e -> true);
+        String searchKey = teacher_search.getText().toLowerCase();
 
-        teacher_search.textProperty().addListener((Observable, oldValue, newValue) -> {
-            filter.setPredicate(predicateTeacherData -> {
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
-                String searchKey = newValue.toLowerCase();
-                if (predicateTeacherData.getTeacherNum().toString().contains(searchKey)) {
-                    return true;
-                } else if (predicateTeacherData.getName().toLowerCase().contains(searchKey)) {
-                    return true;
-                } else if (predicateTeacherData.getGender().toLowerCase().contains(searchKey)) {
-                    return true;
-                } else if (predicateTeacherData.getAddress().toLowerCase().contains(searchKey)) {
-                    return true;
-                } else if (predicateTeacherData.getPhone().toLowerCase().contains(searchKey)) {
-                    return true;
-                } else if (predicateTeacherData.getDob().toString().contains(searchKey)) {
-                    return true;
-                } else if (predicateTeacherData.getCardID().toLowerCase().contains(searchKey)) {
-                    return true;
-                } else if (predicateTeacherData.getDegree().toLowerCase().contains(searchKey)) {
-                    return true;
-                } else if (predicateTeacherData.getClassName().toLowerCase().contains(searchKey)) {
-                    return true;
-                } else if (predicateTeacherData.getSalary().toString().contains(searchKey)) {
-                    return true;
-                } else {
-                    return false;
-                }
-            });
+//        String searchKey = "lá";
+        filter.setPredicate(predicateTeacherData -> {
+            if (searchKey == null || searchKey.isEmpty()) {
+                return true;
+            }
+            if (predicateTeacherData.getTeacherNum().toString().contains(searchKey)) {
+                return true;
+            } else if (predicateTeacherData.getName().toLowerCase().contains(searchKey)) {
+                return true;
+            } else if (predicateTeacherData.getGender().toLowerCase().contains(searchKey)) {
+                return true;
+            } else if (predicateTeacherData.getAddress().toLowerCase().contains(searchKey)) {
+                return true;
+            } else if (predicateTeacherData.getPhone().toLowerCase().contains(searchKey)) {
+                return true;
+            } else if (predicateTeacherData.getDob().toString().contains(searchKey)) {
+                return true;
+            } else if (predicateTeacherData.getCardID().toLowerCase().contains(searchKey)) {
+                return true;
+            } else if (predicateTeacherData.getDegree().toLowerCase().contains(searchKey)) {
+                return true;
+            } else if (predicateTeacherData.getClassName().toLowerCase().contains(searchKey)) {
+                return true;
+            } else if (predicateTeacherData.getSalary().toString().contains(searchKey)) {
+                return true;
+            } else {
+                return false;
+            }
         });
+        System.out.println(searchKey);
         //SẮP XẾP DANH SÁCH HỌC SINH ĐƯỢC TÌM KIẾM THEO THEO BẢNG CHỮ CÁI A-Z
         SortedList<Teacher> sortList = new SortedList<>(filter);
         sortList.comparatorProperty().bind(teacher_tableView.comparatorProperty());
@@ -1037,24 +910,9 @@ public class AdminController implements Initializable {
 
     //Add class to teacher
     public void addTeacherClassList() {
-        String listClass = "SELECT * from Classrooms";
-        connect = DBUtils.connectDb();
+        ObservableList listC = teacherDAO.createClassList();
+        cb_teacherClassID.setItems(listC);
 
-        try {
-
-            ObservableList listC = FXCollections.observableArrayList();
-
-            prepare = connect.prepareStatement(listClass);
-            result = prepare.executeQuery();
-
-            while (result.next()) {
-                listC.add(result.getString("name"));
-            }
-            cb_teacherClassID.setItems(listC);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     //Add degree to teacher
@@ -1070,42 +928,10 @@ public class AdminController implements Initializable {
         ObservableList ObList = FXCollections.observableArrayList(degreeL);
         cb_teacherDegree.setItems(ObList);
     }
-
-    public ObservableList<Teacher> addTeacherListData() {
-
-        ObservableList<Teacher> listTeachers = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM Teachers";
-        connect = DBUtils.connectDb();
-
-        try {
-            Teacher teacherD;
-            prepare = connect.prepareStatement(sql);
-            result = prepare.executeQuery();
-            while (result.next()) {
-                teacherD = new Teacher(result.getInt("teacherNum"),
-                        result.getString("name"),
-                        result.getString("gender"),
-                        result.getString("address"),
-                        result.getString("phone"),
-                        result.getDate("dob"),
-                        result.getString("cardID"),
-                        result.getString("degree"),
-                        result.getString("className"),
-                        result.getFloat("salary"),
-                        result.getString("image"));
-
-                listTeachers.add(teacherD);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return listTeachers;
-    }
-
     private ObservableList<Teacher> addTeachersListD;
 
     public void addTeacherShowListData() {
-        addTeachersListD = addTeacherListData();
+        addTeachersListD = teacherDAO.addTeacherListData();
 
         teacher_col_ID.setCellValueFactory(new PropertyValueFactory<>("teacherNum"));
         teacher_col_name.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -1117,6 +943,8 @@ public class AdminController implements Initializable {
         teacher_col_degree.setCellValueFactory(new PropertyValueFactory<>("degree"));
         teacher_col_classID.setCellValueFactory(new PropertyValueFactory<>("className"));
         teacher_col_salary.setCellValueFactory(new PropertyValueFactory<>("salary"));
+        teacher_col_username.setCellValueFactory(new PropertyValueFactory<>("username"));
+        teacher_col_password.setCellValueFactory(new PropertyValueFactory<>("password"));
 
         teacher_tableView.setItems(addTeachersListD);
     }
@@ -1137,6 +965,8 @@ public class AdminController implements Initializable {
         tf_teacherPhone.setText(String.valueOf(teacherD.getPhone()));
         tf_teacher_IDCard.setText(String.valueOf(teacherD.getCardID()));
         tf_teacherSalary.setText(String.valueOf(teacherD.getSalary()));
+        tf_teacherUserName.setText(String.valueOf(teacherD.getUsername()));
+        tf_teacherPassword.setText(String.valueOf(teacherD.getPassword()));
 
         String uri = "file:" + teacherD.getImage();
         image = new Image(uri, 130, 147, false, true);
@@ -1145,32 +975,10 @@ public class AdminController implements Initializable {
     }
 
     //LÀM VIỆC VỚI CLASSROOM FORM
-    public ObservableList<Classroom> addClassroomListData() {
-        ObservableList<Classroom> listData = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM Classrooms";
-        connect = DBUtils.connectDb();
-        try {
-            Classroom classroomD;
-            prepare = connect.prepareStatement(sql);
-            result = prepare.executeQuery();
-            while (result.next()) {
-                classroomD = new Classroom(result.getString("name"),
-                        result.getInt("quality"),
-                        result.getString("room"),
-                        result.getString("teacherName"),
-                        result.getString("year"));
-                listData.add(classroomD);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return listData;
-    }
-
     private ObservableList<Classroom> addClassroomList;
 
     public void addClassroomShowListData() {
-        addClassroomList = addClassroomListData();
+        addClassroomList = classroomDAO.addClassroomListData();
 
         class_col_name.setCellValueFactory(new PropertyValueFactory<>("name"));
         class_col_quality.setCellValueFactory(new PropertyValueFactory<>("quality"));
@@ -1190,8 +998,6 @@ public class AdminController implements Initializable {
         tf_className.setText(String.valueOf(classD.getName()));
         tf_classQualityStudent.setText(String.valueOf(classD.getQuality()));
         tf_classRoom.setText(String.valueOf(classD.getRoom()));
-//        tf_classTeacherName.setText(String.valueOf(classD.getTeacherName()));
-//        cb_classYear: giải quyết 1 hàm sau
     }
 
     public void addClassroomYearList() {
@@ -1205,49 +1011,45 @@ public class AdminController implements Initializable {
         cb_classYear.setItems(ObList);
     }
 
+    public boolean validateClassroom() {
+        Alert alert;
+        if (tf_className.getText().isEmpty()
+                || tf_classQualityStudent.getText().isEmpty()
+                || tf_classRoom.getText().isEmpty()
+                || cb_classTeacherName.getSelectionModel().getSelectedItem() == null
+                || cb_classYear.getSelectionModel().getSelectedItem() == null) {
+            notice.errorBlankField();
+            return false;
+        }
+        else {return true;}
+    }
+
+    public Classroom createClassroom() {
+        Classroom classroom = new Classroom();
+        classroom.setName(tf_className.getText());
+        classroom.setQuality(Integer.parseInt(tf_classQualityStudent.getText()));
+        classroom.setRoom(tf_classRoom.getText());
+        classroom.setTeacherName((String) cb_classTeacherName.getSelectionModel().getSelectedItem());
+        classroom.setYear((String) cb_classYear.getSelectionModel().getSelectedItem());
+        return classroom;
+    }
+
     public void addClassroomAdd() {
-        String insertData = "INSERT INTO Classrooms (name, quality, room, teacherName, year) VALUES (?,?,?,?,?)";
-        connect = DBUtils.connectDb();
         try {
             Alert alert;
-            if (tf_className.getText().isEmpty()
-                    || tf_classQualityStudent.getText().isEmpty()
-                    || tf_classRoom.getText().isEmpty()
-                    || cb_classTeacherName.getSelectionModel().getSelectedItem() == null
-                    || cb_classYear.getSelectionModel().getSelectedItem() == null) {
+            if (validateClassroom() == false) return;
+                //CHECK CLASSROOM EXITS?
+            if(classroomDAO.isClassroomExist(tf_className.getText())){
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error Message");
                 alert.setHeaderText(null);
-                alert.setContentText("Please fill all the blank fields");
+                alert.setContentText("Classroom # " + tf_className.getText() + " was already exited!");
                 alert.showAndWait();
             } else {
-                //CHECK STUDENT EXITS?
-                String checkData = " SELECT name FROM Classrooms WHERE name = '"
-                        + tf_className.getText() + "'";
-                statement = connect.createStatement();
-                result = statement.executeQuery(checkData);
-
-                if (result.next()) {
-                    alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error Message");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Classroom # " + tf_className.getText() + " was already exited!");
-                    alert.showAndWait();
-                } else {
-                    prepare = connect.prepareStatement(insertData);
-                    prepare.setString(1, tf_className.getText());
-                    prepare.setString(2, tf_classQualityStudent.getText());
-                    prepare.setString(3, tf_classRoom.getText());
-                    prepare.setString(4, (String) cb_classTeacherName.getSelectionModel().getSelectedItem());
-                    prepare.setString(5, (String) cb_classYear.getSelectionModel().getSelectedItem());
-
-                    prepare.executeUpdate();
-
-                    alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Information Message");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Successfully Added!");
-                    alert.showAndWait();
+                Classroom classroom = createClassroom();
+                boolean rs = classroomDAO.createClass(classroom);
+                if(rs) {
+                    notice.successAdd();
                     //TO UPDATE THE TABLEVIEW
                     addClassroomShowListData();
                     //TO CLEAR THE FIELDS
@@ -1268,48 +1070,26 @@ public class AdminController implements Initializable {
     }
 
     public void addClassroomUpdate() {
-        String updateData = "UPDATE Students SET "
-                + "', name = '" + tf_className.getText()
-                + "', quality = '" + tf_classQualityStudent.getText()
-                + "', room = '" + tf_classRoom.getText()
-                + "', teacherName = '" + cb_classTeacherName.getSelectionModel().getSelectedItem()
-                + "', year = '" + cb_classYear.getSelectionModel().getSelectedItem()
-                + "'";
-        connect = DBUtils.connectDb();
-
         try {
             Alert alert;
-            if (tf_className.getText().isEmpty()
-                    || tf_classQualityStudent.getText().isEmpty()
-                    || tf_classRoom.getText().isEmpty()
-                    || cb_classTeacherName.getSelectionModel().getSelectedItem() == null
-                    || cb_classYear.getSelectionModel().getSelectedItem() == null) {
-                alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error Message");
-                alert.setHeaderText(null);
-                alert.setContentText("Please fill all the blank fields");
-                alert.showAndWait();
+            if (tf_className.getText().isEmpty()) {
+                return;
             } else {
                 alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Confirm Message");
                 alert.setHeaderText(null);
                 alert.setContentText("Are you sure you want to UPDATE Classroom " + tf_className.getText() + "?");
                 Optional<ButtonType> option = alert.showAndWait();
-
                 if (option.get().equals(ButtonType.OK)) {
-                    statement = connect.createStatement();
-                    statement.executeUpdate(updateData);
-
-                    alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Information Message");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Successfully Updated!");
-                    alert.showAndWait();
-
-                    //TO DO UPDATE THE TABLEVIEW
-                    addClassroomShowListData();
-                    //TO CLEAR THE FIELDS
-                    addClassroomClear();
+                    Classroom classroom = createClassroom();
+                    boolean result = classroomDAO.updateClassroom(classroom);
+                    if(result) {
+                        notice.successUpdate();
+                        //TO DO UPDATE THE TABLEVIEW
+                        addClassroomShowListData();
+                        //TO CLEAR THE FIELDS
+                        addClassroomClear();
+                    }
                 } else {
                     return;
                 }
@@ -1321,22 +1101,11 @@ public class AdminController implements Initializable {
     }
 
     public void addClassroomDelete() {
-        String deleteData = "DELETE FROM Classrooms WHERE name = '"
-                + tf_className.getText() + "'";
 
-        connect = DBUtils.connectDb();
         try {
             Alert alert;
-            if (tf_className.getText().isEmpty()
-                    || tf_classQualityStudent.getText().isEmpty()
-                    || tf_classRoom.getText().isEmpty()
-                    || cb_classTeacherName.getSelectionModel().getSelectedItem() == null
-                    || cb_classYear.getSelectionModel().getSelectedItem() == null) {
-                alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error Message");
-                alert.setHeaderText(null);
-                alert.setContentText("Please fill all the blank fields");
-                alert.showAndWait();
+            if (tf_className.getText().isEmpty()) {
+                return;
             } else {
                 alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Confirmation Message");
@@ -1344,22 +1113,15 @@ public class AdminController implements Initializable {
                 alert.setContentText("Are you sure you want to DELETE Class " + tf_className.getText() + "?");
                 Optional<ButtonType> option = alert.showAndWait();
                 if (option.get().equals(ButtonType.OK)) {
-
-                    statement = connect.createStatement();
-                    statement.executeUpdate(deleteData);
-
-                    alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Information Message");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Successfully Deleted!");
-                    alert.showAndWait();
-
-                    //TO DO UPDATE THE TABLEVIEW
-                    addClassroomShowListData();
-                    //TO CLEAR THE FIELDS
-                    addClassroomClear();
-
-
+                    Classroom creClass = createClassroom();
+                    boolean re = classroomDAO.deleteClassroom(creClass);
+                    if(re == true) {
+                        notice.successDelete();
+                        //TO DO UPDATE THE TABLEVIEW
+                        addClassroomShowListData();
+                        //TO CLEAR THE FIELDS
+                        addClassroomClear();
+                    }
                 } else return;
             }
         } catch (Exception e) {
@@ -1367,55 +1129,222 @@ public class AdminController implements Initializable {
         }
     }
 
-    public void addClassroomTeacherNameList() {
-        String listClass = "SELECT * from Teachers";
-        connect = DBUtils.connectDb();
+    //Search Classroom
+    public void addClassSearch() {
+        FilteredList<Classroom> filter = new FilteredList<>(addClassroomList, e -> true);
+        String searchKey = class_search.getText().toLowerCase();
 
-        try {
+        filter.setPredicate(predicateTeacherData -> {
 
-            ObservableList listC = FXCollections.observableArrayList();
-
-            prepare = connect.prepareStatement(listClass);
-            result = prepare.executeQuery();
-
-            while (result.next()) {
-                listC.add(result.getString("name"));
+            if (searchKey == null || searchKey.isEmpty()) {
+                return true;
             }
-            cb_classTeacherName.setItems(listC);
+            if (predicateTeacherData.getName().toString().toLowerCase().contains(searchKey)) {
+                return true;
+            } else if (predicateTeacherData.getTeacherName().toLowerCase().contains(searchKey)) {
+                return true;
+            } else if (predicateTeacherData.getYear().toLowerCase().contains(searchKey)) {
+                return true;
+            } else if (predicateTeacherData.getQuality().toString().contains(searchKey)) {
+                return true;
+            } else if (predicateTeacherData.getRoom().toLowerCase().contains(searchKey)) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+        //SẮP XẾP DANH SÁCH HỌC SINH ĐƯỢC TÌM KIẾM THEO THEO BẢNG CHỮ CÁI A-Z
+        SortedList<Classroom> sortList = new SortedList<>(filter);
+        sortList.comparatorProperty().bind(class_tableView.comparatorProperty());
+        class_tableView.setItems(sortList);
+    }
+
+    public void addClassroomTeacherNameList() {
+        ObservableList listC = classroomDAO.createTeacherList();
+        cb_classTeacherName.setItems(listC);
+    }
+//YEAR SCHOOL
+public boolean validateYear() {
+    Alert alert;
+    if (tf_year.getText().isEmpty()
+            || tf_schoolyear.getText().isEmpty()
+            || date_start.getValue() == null
+            || date_end.getValue() ==null) {
+        notice.errorBlankField();
+        return false;
+    }
+    return true;
+}
+
+    public Year createYear() {
+        Year year = new Year();
+        year.setId(tf_year.getText());
+        year.setSchoolYear(tf_schoolyear.getText());
+        year.setStartDate(java.sql.Date.valueOf(date_start.getValue()));
+        year.setEndDate(java.sql.Date.valueOf(date_end.getValue()));
+        return year;
+    }
+
+    //Process add button in Year form
+    //Add a new year to table
+    public void addYearAdd() {
+        try {
+            Alert alert;
+            if (validateYear() == false) return;
+
+            //CHECK STUDENT EXITS?
+            if (yearDAO.isYearExist(tf_year.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Year # " + tf_year.getText() + " was already exited!");
+                alert.showAndWait();
+            } else {
+                Year year = createYear();
+                boolean result = yearDAO.createNewYear(year);
+
+                if (result == false) {
+                    notice.falseAdd();
+                }
+                else {
+                    notice.successAdd();
+                    //TO UPDATE THE TABLEVIEW
+                    addYearShowListData();
+                    //TO CLEAR THE FIELDS
+                    addYearClear();
+                }
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    //Process clear button
+    public void addYearClear() {
+        tf_year.setText("");
+        tf_schoolyear.setText("");
+        date_start.setValue(null);
+        date_end.setValue(null);
+    }
 
-    //Chuyển đổi giữa các form home, student, teacher, class, schedule
+    //Process with update button
+    public void addYearUpdate() {
+        try {
+            Alert alert;
+            if (tf_year.getText().isEmpty()) {
+                return;
+            } else {
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirm Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Are you sure you want to UPDATE Year #" + tf_year.getText() + "?");
+                Optional<ButtonType> option = alert.showAndWait();
+
+                if (option.get().equals(ButtonType.OK)) {
+                    Year year = createYear();
+                    boolean result = yearDAO.updateYear(year);
+
+                    if (result == true) {
+                        notice.successUpdate();
+
+                        addYearShowListData();
+                        addYearClear();
+                    }
+                } else {
+                    return;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //Process with delete button
+    public void addYearDelete() {
+        try {
+            Alert alert;
+            if (tf_year.getText().isEmpty()) {return;}
+            else {
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmation Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Are you sure you want to DELETE Year #" + tf_year.getText() + "?");
+                Optional<ButtonType> option = alert.showAndWait();
+                if (option.get().equals(ButtonType.OK)) {
+                    Year year = createYear();
+                    boolean result = yearDAO.deleteYear(year);
+                    if(result == true) {
+                        notice.successDelete();
+
+                        addYearShowListData();
+                        addYearClear();
+                    }
+                } else return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private ObservableList<Year> addYearListD;
+
+    public void addYearShowListData() {
+        addYearListD = yearDAO.addYearListData();
+
+        year_col_id.setCellValueFactory(new PropertyValueFactory<>("id"));
+        year_col_schoolYear.setCellValueFactory(new PropertyValueFactory<>("schoolYear"));
+        year_col_startDate.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+        year_col_endDate.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+
+        table_yearView.setItems(addYearListD);
+    }
+
+    //Khi kích chọn vào hàng trong bảng TableView thì nó sẽ thêm thông tin vào các trường bên dưới (ảnh, tên...)
+
+    public void addYearSelect() {
+        Year yearD = table_yearView.getSelectionModel().getSelectedItem();
+        int num = table_yearView.getSelectionModel().getSelectedIndex();
+
+        if ((num - 1) < -1) {
+            return;
+        }
+
+        tf_year.setText(String.valueOf(yearD.getId()));
+        tf_schoolyear.setText(String.valueOf(yearD.getSchoolYear()));
+        date_start.setValue(LocalDate.parse(String.valueOf(yearD.getStartDate())));
+        date_end.setValue(LocalDate.parse(String.valueOf(yearD.getEndDate())));
+    }
+        //Chuyển đổi giữa các form home, student, teacher, class, year
     public void swichForm(ActionEvent event) {
         if (event.getSource() == button_home) {
             home_form.setVisible(true);
             student_form.setVisible(false);
             teacher_form.setVisible(false);
             class_form.setVisible(false);
-            schedule_form.setVisible(false);
+            year_form.setVisible(false);
 
             button_home.setStyle("-fx-background-color: linear-gradient(to bottom right, #3f82ae, #26bf7d)");
             button_student.setStyle("-fx-background-color: transparent");
             button_teacher.setStyle("-fx-background-color: transparent");
             button_class.setStyle("-fx-background-color: transparent");
-            button_schedule.setStyle("-fx-background-color: transparent");
+            button_year.setStyle("-fx-background-color: transparent");
+
+            homeDisplayTotalStudents();
+            homeDisplayTotalTeachers();
+            homeDisplayTotalClasses();
 
         } else if (event.getSource() == button_student) {
             home_form.setVisible(false);
             student_form.setVisible(true);
             teacher_form.setVisible(false);
             class_form.setVisible(false);
-            schedule_form.setVisible(false);
+            year_form.setVisible(false);
 
             button_student.setStyle("-fx-background-color: linear-gradient(to bottom right, #3f82ae, #26bf7d)");
             button_home.setStyle("-fx-background-color: transparent");
             button_teacher.setStyle("-fx-background-color: transparent");
             button_class.setStyle("-fx-background-color: transparent");
-            button_schedule.setStyle("-fx-background-color: transparent");
+            button_year.setStyle("-fx-background-color: transparent");
 
             //TO BECOME UPDATE ONCE YOU CLICK THE ADD STUDENTS BUTTON ON NAV
             addStudentShowListData();
@@ -1430,13 +1359,13 @@ public class AdminController implements Initializable {
             student_form.setVisible(false);
             teacher_form.setVisible(true);
             class_form.setVisible(false);
-            schedule_form.setVisible(false);
+            year_form.setVisible(false);
 
             button_teacher.setStyle("-fx-background-color: linear-gradient(to bottom right, #3f82ae, #26bf7d)");
             button_student.setStyle("-fx-background-color: transparent");
             button_home.setStyle("-fx-background-color: transparent");
             button_class.setStyle("-fx-background-color: transparent");
-            button_schedule.setStyle("-fx-background-color: transparent");
+            button_year.setStyle("-fx-background-color: transparent");
             addTeacherShowListData();
             addTeacherGenderList();
             addTeacherDegreeList();
@@ -1448,25 +1377,26 @@ public class AdminController implements Initializable {
             student_form.setVisible(false);
             teacher_form.setVisible(false);
             class_form.setVisible(true);
-            schedule_form.setVisible(false);
+            year_form.setVisible(false);
 
             button_class.setStyle("-fx-background-color: linear-gradient(to bottom right, #3f82ae, #26bf7d)");
             button_student.setStyle("-fx-background-color: transparent");
             button_teacher.setStyle("-fx-background-color: transparent");
             button_home.setStyle("-fx-background-color: transparent");
-            button_schedule.setStyle("-fx-background-color: transparent");
+            button_year.setStyle("-fx-background-color: transparent");
             addClassroomShowListData();
             addClassroomTeacherNameList();
             addClassroomYearList();
+            addClassSearch();
 
-        } else if (event.getSource() == button_schedule) {
+        } else if (event.getSource() == button_year) {
             home_form.setVisible(false);
             student_form.setVisible(false);
             teacher_form.setVisible(false);
             class_form.setVisible(false);
-            schedule_form.setVisible(true);
+            year_form.setVisible(true);
 
-            button_schedule.setStyle("-fx-background-color: linear-gradient(to bottom right, #3f82ae, #26bf7d)");
+            button_year.setStyle("-fx-background-color: linear-gradient(to bottom right, #3f82ae, #26bf7d)");
             button_student.setStyle("-fx-background-color: transparent");
             button_teacher.setStyle("-fx-background-color: transparent");
             button_class.setStyle("-fx-background-color: transparent");
@@ -1493,46 +1423,26 @@ public class AdminController implements Initializable {
         stage.setIconified(true);
     }
 
-    //Student.java(Model)
-    //ADD STUDENT TO STUDENT_FORM
-
-
-    public void logout() {
+    public void logout(ActionEvent event) {
         try {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmation Message");
-            alert.setHeaderText(null);
-            alert.setContentText("Are you sure you want to logout?");
-            Optional<ButtonType> option = alert.showAndWait();
-
+            Optional<ButtonType> option = notice.confirmLogout();
             if (option.get().equals(ButtonType.OK)) {
                 //Hide your dashboard form
                 button_logout.getScene().getWindow().hide();
 
                 //Link to login form
-                Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));
-                Stage stage = new Stage();
-                Scene scene = new Scene(root);
-
-                stage.initStyle(StageStyle.TRANSPARENT);
-
-                stage.setScene(scene);
-                stage.show();
+                Helper.changeScence(event, "login.fxml");
             } else return;
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         account();
-        //To show immediately when we process to dashboard application form
-//        addStudentShowListData();
-//        addStudentYearList();
-//        addStudentClassList();
-//        addStudentGenderList();
-//        addStudentStatusList();
+        homeDisplayTotalStudents();
+        homeDisplayTotalTeachers();
+        homeDisplayTotalClasses();
     }
 }
